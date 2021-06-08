@@ -38,7 +38,7 @@ params:
         subtitle: 铁甲依然在
         avatar:
             local: true
-            src: img/mao.png
+            src: img/mao.jpg
 
     article:
         math: false
