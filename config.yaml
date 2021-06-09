@@ -1,4 +1,4 @@
-baseurl: https://example.com
+baseurl: https://wangxuan.netlify.app/
 languageCode: ch-cn
 theme: "hugo-theme-stack"
 paginate: 5
