@@ -1,0 +1,18 @@
+---
+title: test2
+author: wnagxuan
+date: '2021-06-09'
+slug: test2
+categories:
+  - R
+  - Test
+tags: []
+description: ~
+image: ~
+math: ~
+license: ~
+hidden: no
+comments: yes
+---
+# test
+test
