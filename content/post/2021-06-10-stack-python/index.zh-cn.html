@@ -1,7 +1,7 @@
 ---
 title: 栈(python数据结构)
 author: wangxuan
-date: '2021-06-10'
+date: '2021-06-09'
 slug: Stack_python
 categories:
   - python
@@ -38,29 +38,29 @@ for i in range(5):
   print(&quot;Sum id %d required %f seconds&quot; 
         % sumOfN(10000))
 </code></pre>
-<pre><code>## Sum id 10000 required 0.001000 seconds
-## Sum id 10000 required 0.000000 seconds
-## Sum id 10000 required 0.001961 seconds
-## Sum id 10000 required 0.003003 seconds
-## Sum id 10000 required 0.002004 seconds</code></pre>
+<pre><code>## Sum id 10000 required 0.005993 seconds
+## Sum id 10000 required 0.006014 seconds
+## Sum id 10000 required 0.004985 seconds
+## Sum id 10000 required 0.006995 seconds
+## Sum id 10000 required 0.006004 seconds</code></pre>
 <pre class="python"><code>for i in range(5):
   print(&quot;Sum id %d required %f seconds&quot; 
         % sumOfN(100000)
         )
  </code></pre>
-<pre><code>## Sum id 100000 required 0.009999 seconds
-## Sum id 100000 required 0.009994 seconds
-## Sum id 100000 required 0.010005 seconds
-## Sum id 100000 required 0.008006 seconds
-## Sum id 100000 required 0.010992 seconds</code></pre>
+<pre><code>## Sum id 100000 required 0.047002 seconds
+## Sum id 100000 required 0.043996 seconds
+## Sum id 100000 required 0.029989 seconds
+## Sum id 100000 required 0.036004 seconds
+## Sum id 100000 required 0.035009 seconds</code></pre>
 <pre class="python"><code>for i in range(5):
   print(&quot;Sum id %d required %f seconds&quot; 
         % sumOfN(1000000))</code></pre>
-<pre><code>## Sum id 1000000 required 0.113867 seconds
-## Sum id 1000000 required 0.102683 seconds
-## Sum id 1000000 required 0.100003 seconds
-## Sum id 1000000 required 0.091996 seconds
-## Sum id 1000000 required 0.082002 seconds</code></pre>
+<pre><code>## Sum id 1000000 required 0.543565 seconds
+## Sum id 1000000 required 0.577095 seconds
+## Sum id 1000000 required 0.702055 seconds
+## Sum id 1000000 required 0.420000 seconds
+## Sum id 1000000 required 0.504063 seconds</code></pre>
 <p>当求和的数量级增加,需要的时间也在上升。
 ### 无迭代算法</p>
 <pre class="python"><code>def sumOfN2(n):
