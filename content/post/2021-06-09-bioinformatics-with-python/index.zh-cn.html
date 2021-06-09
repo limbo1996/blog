@@ -1,0 +1,69 @@
+---
+title: Bioinformatics with Python
+author: wangxuan
+date: '2021-06-09'
+slug: index.zh-cn
+categories:
+  - python
+tags:
+  - python
+description: ~
+image: bioinfo_with_python.png
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<blockquote>
+<p>参考《Antao - Bioinformatics with Python Cookbook Second Edition》</p>
+</blockquote>
+<div id="处理基本的测序数据" class="section level1">
+<h1>处理基本的测序数据</h1>
+<div id="准备" class="section level2">
+<h2>准备</h2>
+<p>下载Biopython</p>
+</div>
+<div id="过程" class="section level2">
+<h2>过程</h2>
+<p>导入模块并验证邮箱</p>
+<pre class="python"><code>from Bio import Entrez, SeqIO
+
+Entrez.email = &quot;your@email&quot;</code></pre>
+<p>下载数据</p>
+<pre class="python"><code>from Bio import Entrez, SeqIO
+hdl = Entrez.efetch(db=&#39;nucleotide&#39;, id=[&#39;NM_002299&#39;], rettype=&#39;fasta&#39;)  
+seq = SeqIO.read(hdl, &#39;fasta&#39;)</code></pre>
+<pre class="python"><code>print(seq.id)</code></pre>
+<pre><code>## NM_002299.4</code></pre>
+<p>这一步将这个sequence读入为了一个<code>Biopython sequence</code>对象。</p>
+<div id="数据保存" class="section level3">
+<h3>数据保存</h3>
+<p>接下来将读入的数据保存为一个FASTA文件</p>
+<pre class="python"><code>from Bio import SeqIO
+
+w_hdl = open(&quot;C:\\Users\\97440\\Documents\\GitHub\\blog\\content\\post\\2021-06-09-bioinformatics-with-python\\example.fasta&quot;, &quot;w&quot;)
+w_seq = seq[11:5795]
+SeqIO.write([w_seq], w_hdl, &quot;fasta&quot;)</code></pre>
+<pre><code>## 1</code></pre>
+<pre class="python"><code>w_hdl.close()</code></pre>
+<p><code>SeqIO.write</code> 函数输入的是一个sequence的list(可以不只是一个sequence)，但是当你要一次写入很多个sequence的时候， 最好不要用list，因为会消耗大量的内存，最好使用一个迭代器或者多次运行<code>SeqIO.write</code> .</p>
+<p>到这里我们下载并保存了一个一个<code>fasta</code>文件，接下来将其读取</p>
+<pre class="python"><code>import os
+os.chdir(&quot;C:\\Users\\97440\\Documents\\GitHub\\blog\\content\\post\\2021-06-09-bioinformatics-with-python\\&quot;)
+recs = SeqIO.parse(&#39;example.fasta&#39;, &#39;fasta&#39;)
+for rec in recs:
+     seq = rec.seq
+     print(rec.description)
+     print(seq[:10])</code></pre>
+<pre><code>## NM_002299.4 Homo sapiens lactase (LCT), mRNA
+## GAAAATGGAG</code></pre>
+<p>在这里我们得到了DNA序列， 同样我们可以直接使用函数将DNA序列转录为RNA序列</p>
+<pre class="python"><code>rna = seq.transcribe()
+rna</code></pre>
+<pre><code>## Seq(&#39;GAAAAUGGAGCUGUCUUGGCAUGUAGUCUUUAUUGCCCUGCUAAGUUUUUCAUG...AUU&#39;)</code></pre>
+<p>同样可以进行翻译</p>
+<pre class="python"><code>pr = seq.translate()</code></pre>
+</div>
+</div>
+</div>
