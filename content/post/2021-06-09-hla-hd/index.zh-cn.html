@@ -1,0 +1,52 @@
+---
+title: HLA分型(HLA-HD)
+author: wangxuan
+date: '2021-06-09'
+slug: hla-hd
+categories:
+  - HLA
+  - software
+tags:
+  - HLA
+description: ~
+image: HLA-typing-pic2.png
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>主页：<a href="https://www.genome.med.kyoto-u.ac.jp/HLA-HD/">HLA-HD</a></p>
+<div id="下载" class="section level2">
+<h2>下载</h2>
+<p>在主页中申请下载，注册一下拿到链接即可下载。</p>
+<pre class="shell"><code>tar -zxvf hlahd.version.tar.gz</code></pre>
+<p>进入解压出来的目录中</p>
+<pre><code>sh install.sh</code></pre>
+<p>即可完成安装</p>
+<p>注意<code>HLA-HD</code>需要<code>bowtie2</code>软件，并且需要将<code>bin</code>添加到<code>PATH</code>中。</p>
+</div>
+<div id="使用" class="section level2">
+<h2>使用</h2>
+<p>官方建议首先确认<code>open files</code>的值，最好大于1024</p>
+<pre class="shell"><code>ulimit -Sa</code></pre>
+<p>如果小于1024</p>
+<pre><code>ulimit -n 1024</code></pre>
+<p>并且如果你的输入文件是压缩格式的，最好解压。</p>
+<blockquote>
+<p>If you have fastq.gz file, unzip gz file in advance.</p>
+</blockquote>
+<pre class="shell"><code>&gt; hlahd.sh -t [thread_num] -m [minimum length of reads] -c [trimming rate] -f [path_to freq_data directory] fastq_1 fastq_2 gene_split_filt path_to_dictionary_directory IDNAME[any name] output_directory</code></pre>
+<p>主要是几个参数：</p>
+<ul>
+<li><p>-m : A read whose length is shorter than this parameter is ignored. Default size is 100.</p></li>
+<li><p>-t : Number of cores used to execute the program.</p></li>
+<li><p>-c : Trimming option. If a match sequence is not found in the dictionary, trim the read until some sequence is matched to or reaches this ratio. Default is 1.0.</p></li>
+<li><p>-f : Use information of allele frequencies. The default data exist in the installed directory (/hlahd.version/freq_data).</p></li>
+</ul>
+</div>
+<div id="实例" class="section level2">
+<h2>实例</h2>
+<pre class="shell"><code>&gt; hlahd.sh -t 2 -m 100 -c 0.95 -f freq_data/ data/sample_1.fastq data/sample_2.fastq HLA_gene.split.txt dictionary/ sampleID estimation</code></pre>
+<p>其中<code>freq_data/</code>, <code>HLA_gene.split.txt</code>, <code>dictionary/</code>, 工具中都有提供。</p>
+</div>
