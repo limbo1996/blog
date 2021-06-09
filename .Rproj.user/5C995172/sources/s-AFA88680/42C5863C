@@ -3,22 +3,22 @@
     "path": "~/GitHub/blog/config.yaml",
     "project_path": "config.yaml",
     "type": "yaml",
-    "hash": "3688246291",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1623200098662.0,
     "source_on_save": false,
     "relative_order": 1,
     "properties": {
-        "cursorPosition": "59,17",
+        "cursorPosition": "56,31",
         "scrollLine": "44"
     },
     "folds": "",
-    "lastKnownWriteTime": 1623203666,
+    "lastKnownWriteTime": 1623204172,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1623203666741,
+    "last_content_update": 1623204172355,
     "read_only": false,
     "read_only_alternatives": []
 }
