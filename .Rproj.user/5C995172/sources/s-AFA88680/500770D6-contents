@@ -1,18 +1,13 @@
 ---
-title: test
-author: wangxuan
+title: "test"
+author: "wangxuan"
 date: '2021-06-09'
-slug: test
+slug: "test"
 categories:
-  - R
+  ["R"]
 tags:
-  - comment
-description: ~
-image: ~
-math: ~
-license: ~
-hidden: no
-comments: yes
+  ["comment"]
+image: mao.jpg
 ---
 ```{R}
 print("hello, world")
