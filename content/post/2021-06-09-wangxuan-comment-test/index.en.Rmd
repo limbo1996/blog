@@ -1,8 +1,8 @@
 ---
-title: wangxuan_comment_test
-author: wangxuan
+title: "wangxuan_comment_test"
+author: "wangxuan"
 date: '2021-06-09'
-slug: wangxuan_comment_test
+slug: "wangxuan_comment_test"
 categories:
   - R
 tags:
@@ -12,6 +12,8 @@ image: ~
 ---
 
 ## test
+test comment
+
 ```{R}
 print("hello")
 ```
