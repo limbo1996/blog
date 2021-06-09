@@ -1,24 +1,24 @@
 {
-    "id": "3469AC7A",
+    "id": "42C5863C",
     "path": "~/GitHub/blog/config.yaml",
     "project_path": "config.yaml",
     "type": "yaml",
-    "hash": "0",
+    "hash": "3688246291",
     "contents": "",
-    "dirty": true,
-    "created": 1623138204958.0,
+    "dirty": false,
+    "created": 1623200098662.0,
     "source_on_save": false,
-    "relative_order": 2,
+    "relative_order": 1,
     "properties": {
-        "cursorPosition": "35,12",
-        "scrollLine": "32"
+        "cursorPosition": "56,30",
+        "scrollLine": "39"
     },
     "folds": "",
-    "lastKnownWriteTime": 1623140130,
+    "lastKnownWriteTime": 1623202553,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1623140536338,
+    "last_content_update": 1623202553697,
     "read_only": false,
     "read_only_alternatives": []
 }
