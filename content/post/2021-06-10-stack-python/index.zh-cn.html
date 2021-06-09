@@ -38,29 +38,29 @@ for i in range(5):
   print(&quot;Sum id %d required %f seconds&quot; 
         % sumOfN(10000))
 </code></pre>
-<pre><code>## Sum id 10000 required 0.005993 seconds
-## Sum id 10000 required 0.006014 seconds
-## Sum id 10000 required 0.004985 seconds
-## Sum id 10000 required 0.006995 seconds
-## Sum id 10000 required 0.006004 seconds</code></pre>
+<pre><code>## Sum id 10000 required 0.000000 seconds
+## Sum id 10000 required 0.000999 seconds
+## Sum id 10000 required 0.000999 seconds
+## Sum id 10000 required 0.001001 seconds
+## Sum id 10000 required 0.000998 seconds</code></pre>
 <pre class="python"><code>for i in range(5):
   print(&quot;Sum id %d required %f seconds&quot; 
         % sumOfN(100000)
         )
  </code></pre>
-<pre><code>## Sum id 100000 required 0.047002 seconds
-## Sum id 100000 required 0.043996 seconds
-## Sum id 100000 required 0.029989 seconds
-## Sum id 100000 required 0.036004 seconds
-## Sum id 100000 required 0.035009 seconds</code></pre>
+<pre><code>## Sum id 100000 required 0.007997 seconds
+## Sum id 100000 required 0.009000 seconds
+## Sum id 100000 required 0.009001 seconds
+## Sum id 100000 required 0.011999 seconds
+## Sum id 100000 required 0.014004 seconds</code></pre>
 <pre class="python"><code>for i in range(5):
   print(&quot;Sum id %d required %f seconds&quot; 
         % sumOfN(1000000))</code></pre>
-<pre><code>## Sum id 1000000 required 0.543565 seconds
-## Sum id 1000000 required 0.577095 seconds
-## Sum id 1000000 required 0.702055 seconds
-## Sum id 1000000 required 0.420000 seconds
-## Sum id 1000000 required 0.504063 seconds</code></pre>
+<pre><code>## Sum id 1000000 required 0.089997 seconds
+## Sum id 1000000 required 0.122001 seconds
+## Sum id 1000000 required 0.131000 seconds
+## Sum id 1000000 required 0.102000 seconds
+## Sum id 1000000 required 0.105999 seconds</code></pre>
 <p>当求和的数量级增加,需要的时间也在上升。
 ### 无迭代算法</p>
 <pre class="python"><code>def sumOfN2(n):

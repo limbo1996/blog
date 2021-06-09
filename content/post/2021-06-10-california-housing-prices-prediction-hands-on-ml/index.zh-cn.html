@@ -1,0 +1,84 @@
+---
+title: California housing prices prediction(Hands on ML)
+author: wangxuan
+date: '2021-06-10'
+slug: index.zh-cn
+categories:
+  - learn
+  - python
+  - ML
+tags:
+  - learn
+  - python
+description: ~
+image: ML.png
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="python"><code>import os
+import tarfile
+from six.moves import urllib
+import pandas as pd
+import numpy as np</code></pre>
+<pre class="python"><code>def load_housing_data(housing_path):
+    csv_path = os.path.join(housing_path, &quot;housing.csv&quot;)
+    return pd.read_csv(csv_path)</code></pre>
+<p>加载数据</p>
+<pre class="python"><code>housing = load_housing_data(housing_path=&quot;C://Users/97440/Documents/GitHub/blog/content/post/2021-06-10-california-housing-prices-prediction-hands-on-ml/&quot;)
+housing.head()</code></pre>
+<pre><code>##    longitude  latitude  ...  median_house_value  ocean_proximity
+## 0    -122.23     37.88  ...            452600.0         NEAR BAY
+## 1    -122.22     37.86  ...            358500.0         NEAR BAY
+## 2    -122.24     37.85  ...            352100.0         NEAR BAY
+## 3    -122.25     37.85  ...            341300.0         NEAR BAY
+## 4    -122.25     37.85  ...            342200.0         NEAR BAY
+## 
+## [5 rows x 10 columns]</code></pre>
+<pre class="python"><code>housing.info()</code></pre>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## RangeIndex: 20640 entries, 0 to 20639
+## Data columns (total 10 columns):
+##  #   Column              Non-Null Count  Dtype  
+## ---  ------              --------------  -----  
+##  0   longitude           20640 non-null  float64
+##  1   latitude            20640 non-null  float64
+##  2   housing_median_age  20640 non-null  float64
+##  3   total_rooms         20640 non-null  float64
+##  4   total_bedrooms      20433 non-null  float64
+##  5   population          20640 non-null  float64
+##  6   households          20640 non-null  float64
+##  7   median_income       20640 non-null  float64
+##  8   median_house_value  20640 non-null  float64
+##  9   ocean_proximity     20640 non-null  object 
+## dtypes: float64(9), object(1)
+## memory usage: 1.6+ MB</code></pre>
+<p>可以看到出了<code>ocean_proximity</code>其他的格式都是<code>float</code>，下面看一下该列的具体情况。</p>
+<pre class="python"><code>housing[&quot;ocean_proximity&quot;].value_counts()</code></pre>
+<pre><code>## &lt;1H OCEAN     9136
+## INLAND        6551
+## NEAR OCEAN    2658
+## NEAR BAY      2290
+## ISLAND           5
+## Name: ocean_proximity, dtype: int64</code></pre>
+<p>是一个分类变量，一共有四类。</p>
+<p>再看一下数据整体的分布情况:</p>
+<pre class="python"><code>housing.describe()</code></pre>
+<pre><code>##           longitude      latitude  ...  median_income  median_house_value
+## count  20640.000000  20640.000000  ...   20640.000000        20640.000000
+## mean    -119.569704     35.631861  ...       3.870671       206855.816909
+## std        2.003532      2.135952  ...       1.899822       115395.615874
+## min     -124.350000     32.540000  ...       0.499900        14999.000000
+## 25%     -121.800000     33.930000  ...       2.563400       119600.000000
+## 50%     -118.490000     34.260000  ...       3.534800       179700.000000
+## 75%     -118.010000     37.710000  ...       4.743250       264725.000000
+## max     -114.310000     41.950000  ...      15.000100       500001.000000
+## 
+## [8 rows x 9 columns]</code></pre>
+<p>除了这些函数之外，观察数据的另一个有效的办法就是画图，图片一般来说会更加直观。</p>
+<pre class="python"><code>import matplotlib.pyplot as plt
+
+housing.hist(bins=50, figsize=(20, 15))
+plt.show()</code></pre>
