@@ -1,0 +1,399 @@
+---
+title: 栈(python数据结构)
+author: wangxuan
+date: '2021-06-10'
+slug: Stack_python
+categories:
+  - python
+  - learn
+tags:
+  - python
+  - learn
+description: ~
+image: shujujiegou.png
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<blockquote>
+<p>参考慕课《数据结构与算法》</p>
+</blockquote>
+<div id="运行时间检测" class="section level2">
+<h2>运行时间检测</h2>
+<p>用到python的<code>time</code>模块检测不同的累计求和算法的效率</p>
+<pre class="python"><code>import time
+def sumOfN(n):
+  start = time.time()
+  theSum = 0
+  for i in range(1, n + 1):
+    theSum = theSum + 1
+    
+  end = time.time()
+  return theSum, end - start
+
+
+for i in range(5):
+  print(&quot;Sum id %d required %f seconds&quot; 
+        % sumOfN(10000))
+</code></pre>
+<pre><code>## Sum id 10000 required 0.001000 seconds
+## Sum id 10000 required 0.000000 seconds
+## Sum id 10000 required 0.001961 seconds
+## Sum id 10000 required 0.003003 seconds
+## Sum id 10000 required 0.002004 seconds</code></pre>
+<pre class="python"><code>for i in range(5):
+  print(&quot;Sum id %d required %f seconds&quot; 
+        % sumOfN(100000)
+        )
+ </code></pre>
+<pre><code>## Sum id 100000 required 0.009999 seconds
+## Sum id 100000 required 0.009994 seconds
+## Sum id 100000 required 0.010005 seconds
+## Sum id 100000 required 0.008006 seconds
+## Sum id 100000 required 0.010992 seconds</code></pre>
+<pre class="python"><code>for i in range(5):
+  print(&quot;Sum id %d required %f seconds&quot; 
+        % sumOfN(1000000))</code></pre>
+<pre><code>## Sum id 1000000 required 0.113867 seconds
+## Sum id 1000000 required 0.102683 seconds
+## Sum id 1000000 required 0.100003 seconds
+## Sum id 1000000 required 0.091996 seconds
+## Sum id 1000000 required 0.082002 seconds</code></pre>
+<p>当求和的数量级增加,需要的时间也在上升。
+### 无迭代算法</p>
+<pre class="python"><code>def sumOfN2(n):
+  start = time.time()
+  theSum = (n * (n + 1)) / 2
+  end = time.time()
+  return theSum, end - start</code></pre>
+<p><code>10000</code></p>
+<pre class="python"><code>for i in range(5):
+  print(&quot;Sum id %d required %f seconds&quot; 
+        % sumOfN2(10000))</code></pre>
+<pre><code>## Sum id 50005000 required 0.000000 seconds
+## Sum id 50005000 required 0.000000 seconds
+## Sum id 50005000 required 0.000000 seconds
+## Sum id 50005000 required 0.000000 seconds
+## Sum id 50005000 required 0.000000 seconds</code></pre>
+<pre class="python"><code>print(&quot;End\n&quot;)</code></pre>
+<pre><code>## End</code></pre>
+<p><code>100000</code></p>
+<pre class="python"><code>for i in range(5):
+  print(&quot;Sum id %d required %f seconds&quot; 
+        % sumOfN2(100000))</code></pre>
+<pre><code>## Sum id 5000050000 required 0.000000 seconds
+## Sum id 5000050000 required 0.000000 seconds
+## Sum id 5000050000 required 0.000000 seconds
+## Sum id 5000050000 required 0.000000 seconds
+## Sum id 5000050000 required 0.000000 seconds</code></pre>
+<p>无迭代算法的运行时间和输入的数的大小没有关系</p>
+</div>
+<div id="大o表示法" class="section level2">
+<h2>大O表示法</h2>
+<div id="算法时间度量指标" class="section level3">
+<h3>算法时间度量指标</h3>
+<p>一个算法所实施的操作数量或者步骤数可作为独立于程序的度量指标。一个程序中，控制流语句起到组织语句的作用，而赋值语句包含了计算和存储。所以多用赋值语句衡量算法的指标</p>
+<p>算法中，赋值语句多，时间就长。例如：</p>
+<pre class="python"><code>def sumOfN(n):
+    theSum = 0
+    for i in range(1, n + 1):
+        theSum = theSum + 1
+    return theSum</code></pre>
+<p>赋值语句数量<code>T(n) = 1 + n</code>, 即此函数赋值语句执行的次数。</p>
+<p>而算法分析的目标是找到问题规模怎么影响算法执行时间的</p>
+</div>
+<div id="数量级函数" class="section level3">
+<h3>数量级函数</h3>
+<p>从动态的眼光来看<code>T(n)</code>中的精确值并不是特别重要，占<strong>主导</strong>的部分，称为<strong>大O</strong>表示法。</p>
+<p>所以上面函数的运行时间数量级就是<strong>O(n)</strong>，
+也称为算法的时间复杂度，再比如:
+<span class="math display">\[
+T(n) = 5n^2 + 27n + 1005
+\]</span><br />
+他的时间复杂度为
+<span class="math display">\[
+O(n^2)
+\]</span></p>
+<p>而无迭代算法累计求和的的时间复杂度就是<code>O(1)</code></p>
+</div>
+<div id="常见的大o数量级" class="section level3">
+<h3>常见的大O数量级</h3>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210315211026.png" /></p>
+<pre class="python"><code>a = 5
+b = 6
+c = 10
+
+for i in range(n):
+  for j in range(n):
+    x = i * j
+    y = j * j
+    z = i * i</code></pre>
+<p>以上代码的<code>T(n) = 3 + 3n2</code></p>
+</div>
+<div id="变位词问题" class="section level3">
+<h3>变位词问题</h3>
+<p>例如<code>python</code>和<code>typhon</code></p>
+<p>构建函数，检测两个词是不是变位词</p>
+<ol style="list-style-type: decimal">
+<li><p>逐字检查</p>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210315212558.png" /></p></li>
+</ol>
+<p>代码实现</p>
+<pre class="python"><code>def anargramSolution1(s1, s2):
+  alist = list(s2)
+  pos1 = 0
+  stillOK = True
+  while pos1 &lt; len(s1) and stillOK:
+    pos2 = 0
+    found = False
+    
+    while pos2 &lt; len(alist) and not found:
+      if s1[pos1] == alist[pos2]:
+        found = True
+      else:
+        pos2 = pos2 + 1
+        
+    if found:
+      alist[pos2] = None
+    else:
+        stillOK = False
+    pos1 = pos1 + 1
+  return stillOK  </code></pre>
+<p>主要部分在两重循环是, 时间复杂度为<code>O(n2)</code></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>排序比较</p>
+<p>将两个字符串都按照字母的顺序排列，之后在比较是否完全相同</p></li>
+</ol>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210315222532.png" /></p>
+<p>代码实现</p>
+<pre class="python"><code>def anargramSolution2(s1, s2):
+  alist1 = list(s1)
+  alist2 = list(s2)
+  
+  alist1.sort()
+  alist2.sort()
+  
+  pos = 0
+  matches = True
+  while pos &lt; len(s1) and matches:
+    if alist1[pos] == alist2[pos]:
+      pos = pos + 1
+    else:
+      matches = False
+  return matches</code></pre>
+<p>初看， 时间复杂度为<code>O(n)</code>， 但是程序中的<code>sort</code>的使用也同样会有代价，
+这个算法的时间主导的步骤是<strong>排序</strong>的步骤，时间复杂度为<code>O(nlogn)</code>。</p>
+<ol start="3" style="list-style-type: decimal">
+<li><p>暴力法</p>
+<p>穷尽所有的组合， 将s1全排列，看s2是否出现在其中。时间复杂度为<code>O(n!)</code></p></li>
+<li><p>计数比较</p>
+<p>比较两个词中各个字母出现的次数，如果所有次数相同，就一定是变位词</p></li>
+</ol>
+<pre class="python"><code>def anargramSolution4(s1, s2):
+  c1 = [0] * 26
+  c2 = [0] * 26
+  for i in range(len(s1)):
+    pos = ord(s1[i]) - ord(&#39;a&#39;)
+    c1[pos] = c1[pos] + 1
+   
+    for i in range(len(s2)):
+      pos = ord(s2[i]) - ord(&#39;a&#39;)
+      c2[pos] = c2[pos] + 1
+   
+      j = 0
+      stillOK = True
+      while j &lt; 26 and stillOK:
+        if c1[j] == c2[j]:
+          j = j + 1
+        else:
+          stillOK = False
+      return stillOK</code></pre>
+<p>这里比较特殊的是第三个循环，他的循环次数是固定的26个，所以这个算法总操作次数是<code>T(n) = 2n + 26</code>,时间复杂度为<code>O(n)</code></p>
+</div>
+</div>
+<div id="线性结构" class="section level2">
+<h2>线性结构</h2>
+<p>一种有序数据项的集合，其中除第一个和最后一个之外，每一个都有唯一的前驱和后继。</p>
+<p>四种基本的线性结构：</p>
+<ul>
+<li>栈</li>
+<li>队列</li>
+<li>双端队列</li>
+<li>列表</li>
+</ul>
+<p>他们的区别是数据的增减先后的关系，只存在先后关系，所以是线性结构</p>
+<div id="栈" class="section level3">
+<h3>栈</h3>
+<p>栈是一系列对象组成的集合，数据项的加入和移除都发生在同一端，即遵循<strong>后进先出</strong>的原则。</p>
+<p>就像：</p>
+<ul>
+<li><p>向弹夹中塞子弹，最先发射的是最后一个装进去的。</p></li>
+<li><p>撤销机制， 取消的是最近的一个操作。</p></li>
+</ul>
+<div id="实现" class="section level4">
+<h4>实现</h4>
+<ol style="list-style-type: decimal">
+<li>将list的末端作为栈顶</li>
+</ol>
+<pre class="python"><code>class Stack:
+  def __init__(self):
+    self.items = []
+  def isEmpty(self):
+    return self.items == []
+  def push(self, item):
+    self.items.append(item)
+  def pop(self):
+    return self.items.pop()
+  def peek(self):
+    return self.items[len(self.items) - 1]
+  def size(self):
+    return len(self.items)</code></pre>
+<pre class="python"><code>s = Stack()
+print(s.isEmpty())</code></pre>
+<pre><code>## True</code></pre>
+<pre class="python"><code>s.push(4)
+s.push(&quot;dog&quot;)
+print(s.peek())</code></pre>
+<pre><code>## dog</code></pre>
+<pre class="python"><code>s.pop()</code></pre>
+<pre><code>## &#39;dog&#39;</code></pre>
+<pre class="python"><code>s.peek()</code></pre>
+<pre><code>## 4</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>将list的首端(index = 0)作为栈顶</li>
+</ol>
+<pre class="python"><code>class Stack_list_index_0:
+  def __init__(self):
+    self.items = []
+  def isEmpty(self):
+    return self.items == []
+  def push(self, item):
+    self.items.insert(0, item)
+  def pop(self):
+    return self.items.pop(0)
+  def peek(self):
+    return self.items[0]
+  def size(self):
+    return len(self.items)</code></pre>
+<p>这两种的复杂度是不同的，第二种的<code>push</code>以及<code>pop</code>的复杂度都为<code>O(n)</code>，而第一种为<code>O(1)</code>。</p>
+</div>
+<div id="栈的简单应用" class="section level4">
+<h4>栈的简单应用</h4>
+<div id="简单括号匹配" class="section level5">
+<h5>简单括号匹配</h5>
+<p>正确的括号匹配是很多编译器的基础功能，这个功能可以通过栈来实现。</p>
+<blockquote>
+<p>从左到右扫描括号，最先出现的左括号，应该匹配最先遇到的右括号。</p>
+</blockquote>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210316204158.png" /></p>
+<div id="代码实现" class="section level6">
+<h6>代码实现</h6>
+<pre class="python"><code>
+def parChecker(symbolstring):
+  s = Stack()
+  balanced = True
+  index = 0
+  while index &lt; len(symbolstring) and balanced:
+    symbol = symbolstring[index]
+    if symbol == &quot;(&quot;:
+      s.push(symbol)
+    else:
+      if s.isEmpty():
+        balanced = False
+      else:
+        s.pop()
+    index = index + 1
+  if balanced and s.isEmpty():
+    return True
+  else:
+    return False</code></pre>
+<pre class="python"><code>print(parChecker(&quot;((()))&quot;))</code></pre>
+<pre><code>## True</code></pre>
+<pre class="python"><code>print(parChecker(&quot;((()&quot;))</code></pre>
+<pre><code>## False</code></pre>
+<p>当然在程序中，肯定不止<code>(</code>一种括号，但是只要将上面代码简单修改一下，既可以完成通用括号匹配的功能</p>
+<pre class="python"><code>def matches(open, close): 
+  opens = &quot;([{&quot;
+  closers = &quot;)]}&quot; 
+  return opens.index(open) == closers.index(close)
+
+def parChecker(symbolstring): 
+  s = Stack() 
+  balanced = True 
+  index = 0
+  while index &lt; len(symbolstring) and balanced: 
+    symbol = symbolstring[index] 
+    if symbol in &quot;([{&quot;: 
+      s.push(symbol) 
+    else: 
+      if s.isEmpty(): 
+        balanced = False 
+      else: 
+        top = s.pop() 
+        if not matches(top,symbol): 
+          balanced = False 
+          index = index + 1 
+        if balanced and s.isEmpty():
+          return True 
+        else: 
+          return False</code></pre>
+</div>
+</div>
+<div id="十进制转化为二进制" class="section level5">
+<h5>十进制转化为二进制</h5>
+<p>十进制转化为二进制，一般用<strong>除以2求余数</strong>的方法</p>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210317203056.png" /></p>
+<p>连续的相除的过程得到的余数是从低到高，但是在输出的时候需要，从高到低。也就是反过来输出，可以用一个栈来完成。</p>
+<div id="代码实现-1" class="section level6">
+<h6>代码实现</h6>
+<pre class="python"><code>
+def divideBy2(decNumber):
+  remstack = Stack()
+      
+  while decNumber &gt; 0:
+    rem = decNumber % 2 # 求余数
+    remstack.push(rem)
+    decNumber = decNumber // 2
+        
+  binString = &quot;&quot;
+  while not remstack.isEmpty():
+    binString = binString + str(remstack.pop())
+        
+  return binString
+
+print(divideBy2(42))</code></pre>
+<pre><code>## 101010</code></pre>
+<p>扩展为转化成N进制</p>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210317204859.png" /></p>
+</div>
+<div id="代码实现-2" class="section level6">
+<h6>代码实现</h6>
+<pre class="python"><code>
+def baseConverter(decNumber, base):
+  digits = &quot;0123456789ABCDEF&quot;
+  
+  remstack = Stack()
+  
+  while decNumber &gt; 0:
+    rem = decNumber % base # 求余数
+    remstack.push(rem)
+    decNumber = decNumber // base
+    
+  newString = &quot;&quot;
+  
+  while not remstack.isEmpty():
+    newString = newString + digits[remstack.pop()]
+    
+  return newString</code></pre>
+<pre class="python"><code>
+print(baseConverter(25, 2))</code></pre>
+<pre><code>## 11001</code></pre>
+<pre class="python"><code>print(baseConverter(30, 16))</code></pre>
+<pre><code>## 1E</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
