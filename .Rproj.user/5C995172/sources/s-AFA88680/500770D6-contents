@@ -1,11 +1,10 @@
 ---
-title: "test_comment"
-author: "wangxuan"
+title: test
+author: wangxuan
 date: '2021-06-09'
-slug: test-comment
+slug: test
 categories:
   - R
-  - Test
 tags:
   - comment
 description: ~
@@ -15,7 +14,6 @@ license: ~
 hidden: no
 comments: yes
 ---
-# test
 ```{R}
-print("hello world")
+print("hello, world")
 ```
