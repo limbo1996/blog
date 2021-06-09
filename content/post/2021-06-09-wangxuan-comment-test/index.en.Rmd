@@ -9,6 +9,8 @@ tags:
   - comment
 description: ~
 image: ~
+math: ~
+comments: yes
 ---
 
 ## test
