@@ -1,12 +1,12 @@
 {
-    "id": "DFCD3BD8",
+    "id": "8F08194A",
     "path": "~/GitHub/blog/content/post/2021-06-09-wangxuan-comment-test/index.en.Rmd",
     "project_path": "content/post/2021-06-09-wangxuan-comment-test/index.en.Rmd",
     "type": "r_markdown",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1623207827200.0,
+    "created": 1623208074345.0,
     "source_on_save": false,
     "relative_order": 2,
     "properties": {
@@ -19,7 +19,7 @@
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1623207864728,
+    "last_content_update": 1623207864,
     "read_only": false,
     "read_only_alternatives": []
 }
