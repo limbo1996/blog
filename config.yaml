@@ -1,5 +1,5 @@
 baseurl: https://example.com
-languageCode: en-us
+languageCode: ch-cn
 theme: "hugo-theme-stack"
 paginate: 5
 title: Limbowx Blog
@@ -12,7 +12,7 @@ googleAnalytics:
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, es, de, nl
-DefaultContentLanguage: en
+DefaultContentLanguage: zh-cn
 
 permalinks:
     post: /p/:slug/
@@ -51,10 +51,10 @@ params:
         provider: utterances
 
         utterances:
-            repo: limbo1996/blog
-            issueTerm: pathname
+            repo: "limbo1996/blog"
+            issueTerm: "title"
             label: Comment
-            theme: github-light
+            theme: "github-light"
 
         remark42:
             host:

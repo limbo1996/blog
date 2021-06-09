@@ -12,3 +12,8 @@ command = "hugo -F -b $DEPLOY_PRIME_URL"
 [context.production]
 [context.production.environment]
 HUGO_ENV = "production"
+
+[params.utter]
+    repo = "limbo1996/blog"
+    issueTerm = "title" #设置每篇文章对应的 issue 的名字，可选 pathname title url，
+    theme = "github-light"
