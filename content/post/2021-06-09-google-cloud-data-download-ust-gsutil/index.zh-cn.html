@@ -1,0 +1,48 @@
+---
+title: Gsutil下载Google Cloud data
+author: wangxuan
+date: '2021-06-09'
+slug: Google Cloud data Download ust Gsutil
+categories:
+  - software
+tags:
+  - software
+description: ~
+image: google_cloud.png
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="gsutil安装" class="section level2">
+<h2>Gsutil安装</h2>
+<p><a href="https://cloud.google.com/storage/docs/gsutil_install">Gsutil文档</a></p>
+<p>需要Python3(3.5-3.8)或者Python2（2.7.9以上）</p>
+<p><code>{.bash eval = F} wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-320.0.0-linux-x86_64.tar.gz</code></p>
+<p>下载后解压</p>
+<p>之后运行脚本</p>
+<p><code>{.bash eval = F} ./google-cloud-sdk/install.sh</code></p>
+<p>然后初始化</p>
+<p><code>{.bash eval = F} ./google-cloud-sdk/bin/gcloud init</code></p>
+<p>重启shell即完成安装</p>
+</div>
+<div id="数据下载" class="section level2">
+<h2>数据下载</h2>
+<p>主要命令是<code>gsutil cp</code></p>
+<p>以人类参考基因组数据等为例</p>
+<p>文件在(<a href="https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0" class="uri">https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0</a>)</p>
+<div id="下载命令" class="section level3">
+<h3>下载命令</h3>
+<pre class="bash"><code>gsutil cp gs://BUCKET_NAME/OBJECT_NAME SAVE_TO_LOCATION</code></pre>
+<p>其中：</p>
+<ul>
+<li><code>BUCKET_NAME</code> 是包含要下载的对象的存储分区名称，例如 <code>my-bucket</code>。</li>
+<li><code>OBJECT_NAME</code> 是要下载的对象的名称，例如 <code>pets/dog.png</code>。</li>
+<li><code>SAVE_TO_LOCATION</code> 是保存对象的本地路径，例如 <code>Desktop/Images</code>。</li>
+</ul>
+<p>例如</p>
+<pre class="bash"><code>gsutil cp gs://genomics-publicdata/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta .</code></pre>
+<p>下载整个目录加上参数<code>-r</code>.</p>
+</div>
+</div>
