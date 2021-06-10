@@ -39,6 +39,7 @@ def load_housing_data(housing_path):
 
 ```{python}
 housing = load_housing_data(housing_path="C://Users/97440/Documents/GitHub/blog/content/post/2021-06-10-california-housing-prices-prediction-hands-on-ml/")
+
 housing.head()
 ```
 
