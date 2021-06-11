@@ -149,6 +149,51 @@ housing[&quot;income_cat&quot;].where(housing[&quot;income_cat&quot;] &lt; 5, 5.
 # where满足条件的保留原始值， False的替换为5， inplace指在原数据上操作而不是数据的拷贝</code></pre>
 <pre class="python"><code>housing.income_cat.hist()
 plt.show()</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-14-1.png" width="1920" /></p>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-14-1.png" width="1920" />
+之后即可使用构建好的收入变量分类，使用<code>sklearn</code>中的函数</p>
+<pre class="python"><code>from sklearn.model_selection import StratifiedShuffleSplit
+
+split = StratifiedShuffleSplit(n_splits=1, 
+                               test_size=0.2, 
+                               random_state=12)
+                               
+for train_index, test_index in split.split(housing, 
+                                           housing[&quot;income_cat&quot;]
+                                          ):
+    strat_train_set = housing.loc[train_index]
+    strat_test_set = housing.loc[test_index]
+    
+strat_train_set.income_cat.describe()</code></pre>
+<pre><code>## count    16512.000000
+## mean         3.006541
+## std          1.054602
+## min          1.000000
+## 25%          2.000000
+## 50%          3.000000
+## 75%          4.000000
+## max          5.000000
+## Name: income_cat, dtype: float64</code></pre>
+<pre class="python"><code>strat_test_set.income_cat.describe()</code></pre>
+<pre><code>## count    4128.000000
+## mean        3.007267
+## std         1.054808
+## min         1.000000
+## 25%         2.000000
+## 50%         3.000000
+## 75%         4.000000
+## max         5.000000
+## Name: income_cat, dtype: float64</code></pre>
+<p>查看划分结果</p>
+<pre class="python"><code>housing[&quot;income_cat&quot;].value_counts()/len(housing)</code></pre>
+<pre><code>## 3.0    0.350581
+## 2.0    0.318847
+## 4.0    0.176308
+## 5.0    0.114438
+## 1.0    0.039826
+## Name: income_cat, dtype: float64</code></pre>
+<p>去除构建的<code>index</code></p>
+<pre class="python"><code>
+for set_ in (strat_test_set, strat_train_set):
+    set_.drop(&quot;income_cat&quot;, axis=1, inplace=True)</code></pre>
 </div>
 </div>
