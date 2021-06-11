@@ -10,7 +10,133 @@ categories:
 tags:
   - python
 description: ~
-image: ~
+image: ML.png
 math: ~
 ---
-test
+```{python}
+import os
+import tarfile
+from six.moves import urllib
+import pandas as pd
+import numpy as np
+```
+
+## 导入数据
+
+```{python}
+def load_housing_data(housing_path):
+    csv_path = os.path.join(housing_path, "housing.csv")
+    return pd.read_csv(csv_path)
+  
+housing = load_housing_data(housing_path = "C:\\Users/97440/Documents/GitHub/blog/content/post/2021-06-10-california-housing-price-prediction")
+```
+
+
+## 数据基本信息
+```{python}
+housing.head()
+```
+```{python}
+housing.info()
+```
+只有`ocean_proximity`的`Dtype`是`object`
+```{python}
+housing["ocean_proximity"].value_counts()
+```
+是一个有四个类型的分类变量，接下来观察各列数据的分布情况
+
+```{python}
+housing.describe()
+```
+观察数据的另一个
+
+```{python}
+import matplotlib.pyplot as plt
+housing.hist(bins=50, figsize=(20, 15))
+plt.show()
+```
+
+## 划分训练集和测试集
+```{python}
+def split_train_test(data, test_ratio):
+    shuffled_indices = np.random.permutation(len(data)) # 随机打乱行数, 返回行名的list
+    test_set_size = int(len(data) * test_ratio)
+    test_indices = shuffled_indices[:test_set_size]
+    train_indices = shuffled_indices[test_set_size:]
+    return data.iloc[train_indices], data.iloc[test_indices]
+
+train_set, test_set = split_train_test(housing, 0.2)
+
+print(len(train_set), "train +", len(test_set), "test")
+```
+还有一种方法是直接给数据打上一个标签标定是否数据训练集或者其他， 标签内容可以计算哈希
+```{python}
+import hashlib
+
+def test_set_check(identifier, test_ratio, hash):
+    return hash(np.int64(identifier)).digest()[-1] < 256 * test_ratio
+  
+def split_train_test_by_id(data, test_ratio, id_column, hash=hashlib.md5):
+    ids = data[id_column]
+    in_test_set = ids.apply(lambda id_: test_set_check(id_, test_ratio, hash))
+    return data.loc[~in_test_set], data.loc[in_test_set]
+  
+housing_with_id = housing.reset_index()
+
+housing_with_id.head()
+```
+```{python}
+train_set, test_set = split_train_test_by_id(data=housing_with_id, test_ratio=0.2, id_column="index")
+```
+
+使用经纬度作为`id`
+```{python}
+housing_with_id["id"] = housing["longitude"] * 1000 + housing["latitude"]
+train_set, test_set = split_train_test_by_id(housing_with_id, 0.2, "id")
+```
+
+`sklearn`中有已经包装好的函数
+```{python}
+from sklearn.model_selection import train_test_split
+train_set, test_set = train_test_split(housing, test_size = 0.2, random_state = 42)
+```
+### 分层抽样
+按照收入程度分层抽样
+```{python}
+housing["income_cat"] = np.ceil(housing["median_income"] / 1.5)
+housing["income_cat"].where(housing["income_cat"] < 5, 5.0, inplace = True)
+# where满足条件的保留原始值， False的替换为5， inplace指在原数据上操作而不是数据的拷贝
+```
+
+```{python}
+housing.income_cat.hist()
+plt.show()
+```
+之后即可使用构建好的收入变量分类，使用`sklearn`中的函数
+```{python}
+from sklearn.model_selection import StratifiedShuffleSplit
+
+split = StratifiedShuffleSplit(n_splits=1, 
+                               test_size=0.2, 
+                               random_state=12)
+                               
+for train_index, test_index in split.split(housing, 
+                                           housing["income_cat"]
+                                          ):
+    strat_train_set = housing.loc[train_index]
+    strat_test_set = housing.loc[test_index]
+    
+strat_train_set.income_cat.describe()
+strat_test_set.income_cat.describe()
+```
+查看划分结果
+```{python}
+housing["income_cat"].value_counts()/len(housing)
+```
+去除构建的`index`
+```{python}
+
+for set_ in (strat_test_set, strat_train_set):
+    set_.drop("income_cat", axis=1, inplace=True)
+```
+

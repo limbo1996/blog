@@ -10,11 +10,145 @@ categories:
 tags:
   - python
 description: ~
-image: ~
+image: ML.png
 math: ~
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<p>test</p>
+<pre class="python"><code>import os
+import tarfile
+from six.moves import urllib
+import pandas as pd
+import numpy as np</code></pre>
+<div id="导入数据" class="section level2">
+<h2>导入数据</h2>
+<pre class="python"><code>def load_housing_data(housing_path):
+    csv_path = os.path.join(housing_path, &quot;housing.csv&quot;)
+    return pd.read_csv(csv_path)
+  
+housing = load_housing_data(housing_path = &quot;C:\\Users/97440/Documents/GitHub/blog/content/post/2021-06-10-california-housing-price-prediction&quot;)</code></pre>
+</div>
+<div id="数据基本信息" class="section level2">
+<h2>数据基本信息</h2>
+<pre class="python"><code>housing.head()</code></pre>
+<pre><code>##    longitude  latitude  ...  median_house_value  ocean_proximity
+## 0    -122.23     37.88  ...            452600.0         NEAR BAY
+## 1    -122.22     37.86  ...            358500.0         NEAR BAY
+## 2    -122.24     37.85  ...            352100.0         NEAR BAY
+## 3    -122.25     37.85  ...            341300.0         NEAR BAY
+## 4    -122.25     37.85  ...            342200.0         NEAR BAY
+## 
+## [5 rows x 10 columns]</code></pre>
+<pre class="python"><code>housing.info()</code></pre>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## RangeIndex: 20640 entries, 0 to 20639
+## Data columns (total 10 columns):
+##  #   Column              Non-Null Count  Dtype  
+## ---  ------              --------------  -----  
+##  0   longitude           20640 non-null  float64
+##  1   latitude            20640 non-null  float64
+##  2   housing_median_age  20640 non-null  float64
+##  3   total_rooms         20640 non-null  float64
+##  4   total_bedrooms      20433 non-null  float64
+##  5   population          20640 non-null  float64
+##  6   households          20640 non-null  float64
+##  7   median_income       20640 non-null  float64
+##  8   median_house_value  20640 non-null  float64
+##  9   ocean_proximity     20640 non-null  object 
+## dtypes: float64(9), object(1)
+## memory usage: 1.6+ MB</code></pre>
+<p>只有<code>ocean_proximity</code>的<code>Dtype</code>是<code>object</code></p>
+<pre class="python"><code>housing[&quot;ocean_proximity&quot;].value_counts()</code></pre>
+<pre><code>## &lt;1H OCEAN     9136
+## INLAND        6551
+## NEAR OCEAN    2658
+## NEAR BAY      2290
+## ISLAND           5
+## Name: ocean_proximity, dtype: int64</code></pre>
+<p>是一个有四个类型的分类变量，接下来观察各列数据的分布情况</p>
+<pre class="python"><code>housing.describe()</code></pre>
+<pre><code>##           longitude      latitude  ...  median_income  median_house_value
+## count  20640.000000  20640.000000  ...   20640.000000        20640.000000
+## mean    -119.569704     35.631861  ...       3.870671       206855.816909
+## std        2.003532      2.135952  ...       1.899822       115395.615874
+## min     -124.350000     32.540000  ...       0.499900        14999.000000
+## 25%     -121.800000     33.930000  ...       2.563400       119600.000000
+## 50%     -118.490000     34.260000  ...       3.534800       179700.000000
+## 75%     -118.010000     37.710000  ...       4.743250       264725.000000
+## max     -114.310000     41.950000  ...      15.000100       500001.000000
+## 
+## [8 rows x 9 columns]</code></pre>
+<p>观察数据的另一个</p>
+<pre class="python"><code>import matplotlib.pyplot as plt
+housing.hist(bins=50, figsize=(20, 15))</code></pre>
+<pre><code>## array([[&lt;AxesSubplot:title={&#39;center&#39;:&#39;households&#39;}&gt;,
+##         &lt;AxesSubplot:title={&#39;center&#39;:&#39;housing_median_age&#39;}&gt;,
+##         &lt;AxesSubplot:title={&#39;center&#39;:&#39;latitude&#39;}&gt;],
+##        [&lt;AxesSubplot:title={&#39;center&#39;:&#39;longitude&#39;}&gt;,
+##         &lt;AxesSubplot:title={&#39;center&#39;:&#39;median_house_value&#39;}&gt;,
+##         &lt;AxesSubplot:title={&#39;center&#39;:&#39;median_income&#39;}&gt;],
+##        [&lt;AxesSubplot:title={&#39;center&#39;:&#39;population&#39;}&gt;,
+##         &lt;AxesSubplot:title={&#39;center&#39;:&#39;total_bedrooms&#39;}&gt;,
+##         &lt;AxesSubplot:title={&#39;center&#39;:&#39;total_rooms&#39;}&gt;]], dtype=object)
+## 
+## C:\Users\97440\ANACON~1\lib\site-packages\pandas\plotting\_matplotlib\tools.py:331: MatplotlibDeprecationWarning: 
+## The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
+##   if ax.is_first_col():</code></pre>
+<pre class="python"><code>plt.show()</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-7-1.png" width="1920" /></p>
+</div>
+<div id="划分训练集和测试集" class="section level2">
+<h2>划分训练集和测试集</h2>
+<pre class="python"><code>def split_train_test(data, test_ratio):
+    shuffled_indices = np.random.permutation(len(data)) # 随机打乱行数, 返回行名的list
+    test_set_size = int(len(data) * test_ratio)
+    test_indices = shuffled_indices[:test_set_size]
+    train_indices = shuffled_indices[test_set_size:]
+    return data.iloc[train_indices], data.iloc[test_indices]
+
+train_set, test_set = split_train_test(housing, 0.2)
+
+print(len(train_set), &quot;train +&quot;, len(test_set), &quot;test&quot;)</code></pre>
+<pre><code>## 16512 train + 4128 test</code></pre>
+<p>还有一种方法是直接给数据打上一个标签标定是否数据训练集或者其他， 标签内容可以计算哈希</p>
+<pre class="python"><code>import hashlib
+
+def test_set_check(identifier, test_ratio, hash):
+    return hash(np.int64(identifier)).digest()[-1] &lt; 256 * test_ratio
+  
+def split_train_test_by_id(data, test_ratio, id_column, hash=hashlib.md5):
+    ids = data[id_column]
+    in_test_set = ids.apply(lambda id_: test_set_check(id_, test_ratio, hash))
+    return data.loc[~in_test_set], data.loc[in_test_set]
+  
+housing_with_id = housing.reset_index()
+
+housing_with_id.head()</code></pre>
+<pre><code>##    index  longitude  ...  median_house_value  ocean_proximity
+## 0      0    -122.23  ...            452600.0         NEAR BAY
+## 1      1    -122.22  ...            358500.0         NEAR BAY
+## 2      2    -122.24  ...            352100.0         NEAR BAY
+## 3      3    -122.25  ...            341300.0         NEAR BAY
+## 4      4    -122.25  ...            342200.0         NEAR BAY
+## 
+## [5 rows x 11 columns]</code></pre>
+<pre class="python"><code>train_set, test_set = split_train_test_by_id(data=housing_with_id, test_ratio=0.2, id_column=&quot;index&quot;)</code></pre>
+<p>使用经纬度作为<code>id</code></p>
+<pre class="python"><code>housing_with_id[&quot;id&quot;] = housing[&quot;longitude&quot;] * 1000 + housing[&quot;latitude&quot;]
+train_set, test_set = split_train_test_by_id(housing_with_id, 0.2, &quot;id&quot;)</code></pre>
+<p><code>sklearn</code>中有已经包装好的函数</p>
+<pre class="python"><code>from sklearn.model_selection import train_test_split
+train_set, test_set = train_test_split(housing, test_size = 0.2, random_state = 42)</code></pre>
+<div id="分层抽样" class="section level3">
+<h3>分层抽样</h3>
+<p>按照收入程度分层抽样</p>
+<pre class="python"><code>housing[&quot;income_cat&quot;] = np.ceil(housing[&quot;median_income&quot;] / 1.5)
+housing[&quot;income_cat&quot;].where(housing[&quot;income_cat&quot;] &lt; 5, 5.0, inplace = True)
+# where满足条件的保留原始值， False的替换为5， inplace指在原数据上操作而不是数据的拷贝</code></pre>
+<pre class="python"><code>housing.income_cat.hist()
+plt.show()</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-14-1.png" width="1920" /></p>
+</div>
+</div>
