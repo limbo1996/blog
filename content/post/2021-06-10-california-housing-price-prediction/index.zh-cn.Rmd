@@ -246,3 +246,35 @@ housing_cat_1hot = encoder.fit_transform(housing_cat)
 housing_cat_1hot
 ```
 可以看到这个函数默认是返回`Numpy`数组的。
+
+## Custom Transformers
+虽然`Scikit-Learn`已经提供了大量的`transformers`，但是有时候需要写你自己的转换`transformers`。而构建自己的`transformers`只需要完成最低三个属性`fit()`, `transform()`, `fit_transform()`即可
+实例
+```{python}
+from sklearn.base import BaseEstimator, TransformerMixin
+rooms_ix, bedrooms_ix, population_ix, household_ix = 3, 4, 5, 6
+class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
+  def __init__(self, add_bedrooms_per_room = True): # no *args or **kargs
+    self.add_bedrooms_per_room = add_bedrooms_per_room
+  def fit(self, X, y=None):
+    return self # nothing else to do  
+  def transform(self, X, y=None):
+    rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
+    population_per_household = X[:, population_ix] / X[:, household_ix]
+    if self.add_bedrooms_per_room:
+      bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
+      return np.c_[X, rooms_per_household, population_per_household,bedrooms_per_room]
+    else:
+      return np.c_[X, rooms_per_household, population_per_household]
+```
+## Feature Scaling
+当你的数据的分布差异很大时，Machine Learning通常不会得到很好的效果。例如在目前的数据中，
+`total rooms`的数值分布在6到39320之间，而收入中位数的分布仅为0到15.
+两个常用的将不同分布的数据拉到同一分布的办法：
+
+ * min-max scaling
+ 就是标准化，将数据的分布映射到0到1， 算法就是减去最小值除以最大值，`Scikit-Learn`提供了
+ `MinMaxScaler`
+ * standardization
+ 减去平均值除以方差，生成的数据的分布并不一定是0到1
+

@@ -408,5 +408,48 @@ housing_cat_1hot
 ##        [1., 0., 0., 0., 0.],
 ##        [0., 1., 0., 0., 0.],
 ##        [1., 0., 0., 0., 0.]])</code></pre>
+<p>当然python也提供了一次完成这些过程的函数</p>
+<pre class="python"><code>from sklearn.preprocessing import LabelBinarizer
+encoder = LabelBinarizer()
+housing_cat_1hot = encoder.fit_transform(housing_cat)
+housing_cat_1hot</code></pre>
+<pre><code>## array([[0, 1, 0, 0, 0],
+##        [1, 0, 0, 0, 0],
+##        [0, 0, 0, 0, 1],
+##        ...,
+##        [1, 0, 0, 0, 0],
+##        [0, 1, 0, 0, 0],
+##        [1, 0, 0, 0, 0]])</code></pre>
+<p>可以看到这个函数默认是返回<code>Numpy</code>数组的。</p>
 </div>
+</div>
+<div id="custom-transformers" class="section level2">
+<h2>Custom Transformers</h2>
+<p>虽然<code>Scikit-Learn</code>已经提供了大量的<code>transformers</code>，但是有时候需要写你自己的转换<code>transformers</code>。而构建自己的<code>transformers</code>只需要完成最低三个属性<code>fit()</code>, <code>transform()</code>, <code>fit_transform()</code>即可
+实例</p>
+<pre class="python"><code>from sklearn.base import BaseEstimator, TransformerMixin
+rooms_ix, bedrooms_ix, population_ix, household_ix = 3, 4, 5, 6
+class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
+  def __init__(self, add_bedrooms_per_room = True): # no *args or **kargs
+    self.add_bedrooms_per_room = add_bedrooms_per_room
+  def fit(self, X, y=None):
+    return self # nothing else to do  
+  def transform(self, X, y=None):
+    rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
+    population_per_household = X[:, population_ix] / X[:, household_ix]
+    if self.add_bedrooms_per_room:
+      bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
+      return np.c_[X, rooms_per_household, population_per_household,bedrooms_per_room]
+    else:
+      return np.c_[X, rooms_per_household, population_per_household]</code></pre>
+</div>
+<div id="feature-scaling" class="section level2">
+<h2>Feature Scaling</h2>
+<p>当你的数据的分布差异很大时，Machine Learning通常不会得到很好的效果。例如在目前的数据中，
+<code>total rooms</code>的数值分布在6到39320之间，而收入中位数的分布仅为0到15.
+两个常用的将不同分布的数据拉到同一分布的办法：</p>
+<ul>
+<li><p>min-max scaling</p></li>
+<li><p>standardization</p></li>
+</ul>
 </div>
