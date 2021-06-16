@@ -194,6 +194,219 @@ strat_train_set.income_cat.describe()</code></pre>
 <p>去除构建的<code>index</code></p>
 <pre class="python"><code>
 for set_ in (strat_test_set, strat_train_set):
-    set_.drop(&quot;income_cat&quot;, axis=1, inplace=True)</code></pre>
+    set_.drop(&quot;income_cat&quot;, axis=1, inplace=True)
+    
+train_set, test_test = strat_train_set, strat_test_set
+
+train_set.head()</code></pre>
+<pre><code>##        longitude  latitude  ...  median_house_value  ocean_proximity
+## 13643    -117.33     34.06  ...             68200.0           INLAND
+## 11573    -118.00     33.77  ...            192800.0        &lt;1H OCEAN
+## 20322    -119.14     34.23  ...            500001.0       NEAR OCEAN
+## 16484    -121.06     38.25  ...            200000.0           INLAND
+## 12136    -117.13     33.89  ...            244400.0           INLAND
+## 
+## [5 rows x 10 columns]</code></pre>
+<p>查看数据的经纬度分布</p>
+<pre class="python"><code>housing = train_set.copy()
+housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;, y = &quot;latitude&quot;)</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+数据分布类似加州地图，可以通过改变<code>alpha</code>参数来改变点的透明度来观察数据的密度</p>
+<pre class="python"><code>housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;,
+             y = &quot;latitude&quot;, alpha = 0.1)</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+更进一步添加人口， 房价等信息</p>
+<pre class="python"><code>housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;,
+             y = &quot;latitude&quot;, alpha = 0.4,
+            s  = housing[&quot;population&quot;] / 100,
+            label = &quot;population&quot;, figsize = (10, 7),
+            c=&quot;median_house_value&quot;, cmap=plt.get_cmap(&quot;jet&quot;),
+            colorbar=True)</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-20-1.png" width="960" />
+点的大小代表了人口，颜色代表了房价，可以观察到靠近海的地方房价比较高，除此之外人口数量也与房价有关。
+接下来计算各个属性之间的相关性。</p>
+</div>
+</div>
+<div id="属性相关性" class="section level2">
+<h2>属性相关性</h2>
+<pre class="python"><code>corr_matrix = housing.corr()
+corr_matrix[&quot;median_house_value&quot;].sort_values(ascending=False)</code></pre>
+<pre><code>## median_house_value    1.000000
+## median_income         0.692464
+## total_rooms           0.136181
+## housing_median_age    0.101691
+## households            0.068845
+## total_bedrooms        0.053249
+## population           -0.023968
+## longitude            -0.041032
+## latitude             -0.149359
+## Name: median_house_value, dtype: float64</code></pre>
+<p>收入和房价的相关性也很高</p>
+<pre class="python"><code>from pandas.plotting import scatter_matrix
+
+attributes = [&quot;median_house_value&quot;, &quot;median_income&quot;, 
+              &quot;total_rooms&quot;,&quot;housing_median_age&quot;]
+              
+scatter_matrix(housing[attributes], figsize=(12, 8))# 按照挑选出来的信息，两两画图查看相关性</code></pre>
+<pre><code>## array([[&lt;AxesSubplot:xlabel=&#39;median_house_value&#39;, ylabel=&#39;median_house_value&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;median_income&#39;, ylabel=&#39;median_house_value&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;total_rooms&#39;, ylabel=&#39;median_house_value&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;housing_median_age&#39;, ylabel=&#39;median_house_value&#39;&gt;],
+##        [&lt;AxesSubplot:xlabel=&#39;median_house_value&#39;, ylabel=&#39;median_income&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;median_income&#39;, ylabel=&#39;median_income&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;total_rooms&#39;, ylabel=&#39;median_income&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;housing_median_age&#39;, ylabel=&#39;median_income&#39;&gt;],
+##        [&lt;AxesSubplot:xlabel=&#39;median_house_value&#39;, ylabel=&#39;total_rooms&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;median_income&#39;, ylabel=&#39;total_rooms&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;total_rooms&#39;, ylabel=&#39;total_rooms&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;housing_median_age&#39;, ylabel=&#39;total_rooms&#39;&gt;],
+##        [&lt;AxesSubplot:xlabel=&#39;median_house_value&#39;, ylabel=&#39;housing_median_age&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;median_income&#39;, ylabel=&#39;housing_median_age&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;total_rooms&#39;, ylabel=&#39;housing_median_age&#39;&gt;,
+##         &lt;AxesSubplot:xlabel=&#39;housing_median_age&#39;, ylabel=&#39;housing_median_age&#39;&gt;]],
+##       dtype=object)</code></pre>
+<p>从计算的相关性我们可以看到，最高的是<code>median_income</code>，将其单独拿出来观察。</p>
+<pre class="python"><code>housing.plot(kind=&quot;scatter&quot;, x = &quot;median_income&quot;, y=&quot;median_house_value&quot;, alpha = 0.1)</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+构建一些新的变量, 然后观察这些变量的相关性</p>
+<pre class="python"><code>housing[&quot;rooms_per_household&quot;] = housing[&quot;total_rooms&quot;]/housing[&quot;households&quot;]
+housing[&quot;bedrooms_per_room&quot;] = housing[&quot;total_bedrooms&quot;]/housing[&quot;total_rooms&quot;]
+housing[&quot;population_per_household&quot;]=housing[&quot;population&quot;]/housing[&quot;households&quot;]
+
+corr_matrix = housing.corr()
+corr_matrix[&quot;median_house_value&quot;].sort_values(ascending=False)</code></pre>
+<pre><code>## median_house_value          1.000000
+## median_income               0.692464
+## rooms_per_household         0.155001
+## total_rooms                 0.136181
+## housing_median_age          0.101691
+## households                  0.068845
+## total_bedrooms              0.053249
+## population                 -0.023968
+## population_per_household   -0.025800
+## longitude                  -0.041032
+## latitude                   -0.149359
+## bedrooms_per_room          -0.259161
+## Name: median_house_value, dtype: float64</code></pre>
+<pre class="python"><code>housing_label = housing[&quot;median_house_value&quot;].copy()
+housing = housing.drop(&quot;median_house_value&quot;, axis=1)
+housing_label.head()</code></pre>
+<pre><code>## 13643     68200.0
+## 11573    192800.0
+## 20322    500001.0
+## 16484    200000.0
+## 12136    244400.0
+## Name: median_house_value, dtype: float64</code></pre>
+</div>
+<div id="数据清洗" class="section level2">
+<h2>数据清洗</h2>
+<div id="去除缺失值" class="section level3">
+<h3>去除缺失值</h3>
+<p>对于缺失值，常用的方式是对其进行替换</p>
+<pre class="python"><code>from sklearn.impute import SimpleImputer
+imputer = SimpleImputer(strategy=&quot;median&quot;) # 将缺失值自动替换为中位数
+housing_num = housing.drop(&quot;ocean_proximity&quot;, axis=1) # 对数据进行一份拷贝, 去掉这一列是因为他是分类变量
+housing.info()</code></pre>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## Int64Index: 16512 entries, 13643 to 10725
+## Data columns (total 12 columns):
+##  #   Column                    Non-Null Count  Dtype  
+## ---  ------                    --------------  -----  
+##  0   longitude                 16512 non-null  float64
+##  1   latitude                  16512 non-null  float64
+##  2   housing_median_age        16512 non-null  float64
+##  3   total_rooms               16512 non-null  float64
+##  4   total_bedrooms            16345 non-null  float64
+##  5   population                16512 non-null  float64
+##  6   households                16512 non-null  float64
+##  7   median_income             16512 non-null  float64
+##  8   ocean_proximity           16512 non-null  object 
+##  9   rooms_per_household       16512 non-null  float64
+##  10  bedrooms_per_room         16345 non-null  float64
+##  11  population_per_household  16512 non-null  float64
+## dtypes: float64(11), object(1)
+## memory usage: 1.6+ MB</code></pre>
+<pre class="python"><code>housing_num.info()</code></pre>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## Int64Index: 16512 entries, 13643 to 10725
+## Data columns (total 11 columns):
+##  #   Column                    Non-Null Count  Dtype  
+## ---  ------                    --------------  -----  
+##  0   longitude                 16512 non-null  float64
+##  1   latitude                  16512 non-null  float64
+##  2   housing_median_age        16512 non-null  float64
+##  3   total_rooms               16512 non-null  float64
+##  4   total_bedrooms            16345 non-null  float64
+##  5   population                16512 non-null  float64
+##  6   households                16512 non-null  float64
+##  7   median_income             16512 non-null  float64
+##  8   rooms_per_household       16512 non-null  float64
+##  9   bedrooms_per_room         16345 non-null  float64
+##  10  population_per_household  16512 non-null  float64
+## dtypes: float64(11)
+## memory usage: 1.5 MB</code></pre>
+<p>然后开始替换</p>
+<pre class="python"><code>imputer.fit(housing_num) # fit数据计算中位数</code></pre>
+<pre><code>## SimpleImputer(strategy=&#39;median&#39;)</code></pre>
+<pre class="python"><code>imputer.statistics_ # 检查会不会引入新的缺失值</code></pre>
+<pre><code>## array([-1.18500000e+02,  3.42600000e+01,  2.90000000e+01,  2.12200000e+03,
+##         4.33000000e+02,  1.16400000e+03,  4.07000000e+02,  3.53570000e+00,
+##         5.23234164e+00,  2.03047173e-01,  2.81694631e+00])</code></pre>
+<pre class="python"><code>housing_num.median().values # 与imputer计算的一样</code></pre>
+<pre><code>## array([-1.18500000e+02,  3.42600000e+01,  2.90000000e+01,  2.12200000e+03,
+##         4.33000000e+02,  1.16400000e+03,  4.07000000e+02,  3.53570000e+00,
+##         5.23234164e+00,  2.03047173e-01,  2.81694631e+00])</code></pre>
+<pre class="python"><code>X = imputer.transform(housing_num)# 正式应用到数据上
+housing_tr = pd.DataFrame(X, columns=housing_num.columns)# 转换为dataframe
+housing_tr.head()</code></pre>
+<pre><code>##    longitude  latitude  ...  bedrooms_per_room  population_per_household
+## 0    -117.33     34.06  ...           0.203552                  3.496403
+## 1    -118.00     33.77  ...           0.201662                  2.602273
+## 2    -119.14     34.23  ...           0.308642                  1.275000
+## 3    -121.06     38.25  ...           0.156682                  2.894231
+## 4    -117.13     33.89  ...           0.148355                  3.273810
+## 
+## [5 rows x 11 columns]</code></pre>
+<pre class="python"><code>housing_tr.describe()</code></pre>
+<pre><code>##           longitude      latitude  ...  bedrooms_per_room  population_per_household
+## count  16512.000000  16512.000000  ...       16512.000000              16512.000000
+## mean    -119.579761     35.641475  ...           0.212948                  3.037867
+## std        2.004514      2.139612  ...           0.057750                  9.895339
+## min     -124.300000     32.540000  ...           0.100000                  0.692308
+## 25%     -121.810000     33.940000  ...           0.175629                  2.431462
+## 50%     -118.500000     34.260000  ...           0.203047                  2.816946
+## 75%     -118.010000     37.720000  ...           0.239088                  3.282334
+## max     -114.310000     41.950000  ...           1.000000               1243.333333
+## 
+## [8 rows x 11 columns]</code></pre>
+</div>
+<div id="处理文本信息" class="section level3">
+<h3>处理文本信息</h3>
+<p>接下来开始处理文本信息，因为前面去掉了一列分类变量，可以根据他不同的分类进行映射</p>
+<pre class="python"><code>from sklearn.preprocessing import LabelEncoder
+encoer = LabelEncoder()
+housing_cat = housing[&quot;ocean_proximity&quot;]
+housing_cat_encoded = encoer.fit_transform(housing_cat)
+housing_cat_encoded</code></pre>
+<pre><code>## array([1, 0, 4, ..., 0, 1, 0])</code></pre>
+<pre class="python"><code>print(encoer.classes_)</code></pre>
+<pre><code>## [&#39;&lt;1H OCEAN&#39; &#39;INLAND&#39; &#39;ISLAND&#39; &#39;NEAR BAY&#39; &#39;NEAR OCEAN&#39;]</code></pre>
+<p>但是这样做的问题就是虽然进行了不同映射，但是算法会认为0/1相比于0/4更加的接近。所以可以使用<code>OneHot</code>的方法。</p>
+<pre class="python"><code>from sklearn.preprocessing import OneHotEncoder
+encoder = OneHotEncoder()
+
+housing_cat_1hot = encoder.fit_transform(housing_cat_encoded.reshape(-1, 1))# reshape将其转化为1列
+housing_cat_1hot
+# convert it to a Numpy array</code></pre>
+<pre><code>## &lt;16512x5 sparse matrix of type &#39;&lt;class &#39;numpy.float64&#39;&gt;&#39;
+##  with 16512 stored elements in Compressed Sparse Row format&gt;</code></pre>
+<pre class="python"><code>housing_cat_1hot.toarray()</code></pre>
+<pre><code>## array([[0., 1., 0., 0., 0.],
+##        [1., 0., 0., 0., 0.],
+##        [0., 0., 0., 0., 1.],
+##        ...,
+##        [1., 0., 0., 0., 0.],
+##        [0., 1., 0., 0., 0.],
+##        [1., 0., 0., 0., 0.]])</code></pre>
 </div>
 </div>
