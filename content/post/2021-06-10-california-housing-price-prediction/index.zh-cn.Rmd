@@ -273,8 +273,16 @@ class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
 两个常用的将不同分布的数据拉到同一分布的办法：
 
  * min-max scaling
+ 
  就是标准化，将数据的分布映射到0到1， 算法就是减去最小值除以最大值，`Scikit-Learn`提供了
  `MinMaxScaler`
  * standardization
+ 
  减去平均值除以方差，生成的数据的分布并不一定是0到1
+
+## Select and Train a Model
+
+
+
+
 

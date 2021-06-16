@@ -449,7 +449,13 @@ class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
 <code>total rooms</code>的数值分布在6到39320之间，而收入中位数的分布仅为0到15.
 两个常用的将不同分布的数据拉到同一分布的办法：</p>
 <ul>
-<li><p>min-max scaling</p></li>
-<li><p>standardization</p></li>
+<li>min-max scaling</li>
 </ul>
+<p>就是标准化，将数据的分布映射到0到1， 算法就是减去最小值除以最大值，<code>Scikit-Learn</code>提供了
+<code>MinMaxScaler</code>
+* standardization</p>
+<p>减去平均值除以方差，生成的数据的分布并不一定是0到1</p>
+</div>
+<div id="select-and-train-a-model" class="section level2">
+<h2>Select and Train a Model</h2>
 </div>
