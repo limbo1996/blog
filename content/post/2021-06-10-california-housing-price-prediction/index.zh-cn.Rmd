@@ -252,20 +252,27 @@ housing_cat_1hot
 实例
 ```{python}
 from sklearn.base import BaseEstimator, TransformerMixin
+
 rooms_ix, bedrooms_ix, population_ix, household_ix = 3, 4, 5, 6
+
 class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
-  def __init__(self, add_bedrooms_per_room = True): # no *args or **kargs
-    self.add_bedrooms_per_room = add_bedrooms_per_room
-  def fit(self, X, y=None):
-    return self # nothing else to do  
-  def transform(self, X, y=None):
-    rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
-    population_per_household = X[:, population_ix] / X[:, household_ix]
-    if self.add_bedrooms_per_room:
-      bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
-      return np.c_[X, rooms_per_household, population_per_household,bedrooms_per_room]
-    else:
-      return np.c_[X, rooms_per_household, population_per_household]
+    def __init__(self, add_bedrooms_per_room = True):
+        self.add_bedrooms_per_room = add_bedrooms_per_room
+        
+    def fit(self, X, y=None):
+        return self # nothing else to do  
+      
+    def transform(self, X, y=None):
+        rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
+        
+        population_per_household = X[:, population_ix] / X[:, household_ix]
+        
+        if self.add_bedrooms_per_room:
+          bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
+          
+          return np.c_[X, rooms_per_household, population_per_household,bedrooms_per_room]
+        else:
+          return np.c_[X, rooms_per_household, population_per_household]
 ```
 ## Feature Scaling
 当你的数据的分布差异很大时，Machine Learning通常不会得到很好的效果。例如在目前的数据中，
@@ -276,12 +283,68 @@ class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
  
  就是标准化，将数据的分布映射到0到1， 算法就是减去最小值除以最大值，`Scikit-Learn`提供了
  `MinMaxScaler`
+ 
  * standardization
  
  减去平均值除以方差，生成的数据的分布并不一定是0到1
 
+### pipeline
+当然也可以直接写一个pipeline一步完成上述的数据预处理
+
+```{python}
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+class DataFrameSelector(BaseEstimator, TransformerMixin):
+    def __init__(self, attribute_names):
+        self.attribute_names = attribute_names
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X):
+        return X[self.attribute_names].values
+
+num_attribs = list(housing_num)
+cat_attribs = ["ocean_proximity"]
+
+num_pipeline = Pipeline([
+        ('selector', DataFrameSelector(num_attribs)),
+        ('imputer', SimpleImputer(strategy="median")),
+        ('attribs_adder', CombinedAttributesAdder()),
+        ('std_scaler', StandardScaler()),
+])
+
+cat_pipeline = Pipeline([
+        ('selector', DataFrameSelector(cat_attribs)),
+        ('label_binarizer', LabelBinarizer()),
+])
+'''
+然后可以将两个pipeline拼接
+'''
+from sklearn.pipeline import FeatureUnion
+
+full_pipeline = FeatureUnion(transformer_list=[
+        ("num_pipeline", num_pipeline),
+        ("cat_pipeline", cat_pipeline),
+])
+```
+```{python}
+housing.head()
+household_prepared = full_pipeline.fit_transform(housing)
+household_prepared.head()
+```
+
 ## Select and Train a Model
 
+### Training and Evaluating on the Training Set
+
+```{python}
+from sklearn.linear_model import LinearRegression
+
+
+lin_reg = LinearRegression()
+lin_reg.fit()
+```
 
 
 
