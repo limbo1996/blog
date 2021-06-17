@@ -316,7 +316,7 @@ num_pipeline = Pipeline([
 
 cat_pipeline = Pipeline([
         ('selector', DataFrameSelector(cat_attribs)),
-        ('label_binarizer', LabelBinarizer()),
+        ('one_hot_encoder', OneHotEncoder(sparse=False)),
 ])
 '''
 然后可以将两个pipeline拼接
@@ -331,7 +331,7 @@ full_pipeline = FeatureUnion(transformer_list=[
 ```{python}
 housing.head()
 household_prepared = full_pipeline.fit_transform(housing)
-household_prepared.head()
+household_prepared
 ```
 
 ## Select and Train a Model
