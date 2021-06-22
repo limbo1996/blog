@@ -9,7 +9,7 @@ categories:
 tags:
   - python
 description: ~
-image: shujujigou.png
+image: shujujiegou.png
 math: ~
 ---
 链表是由一组连续或者不连续的节点组成的数据类型，链表通常分为三类：
