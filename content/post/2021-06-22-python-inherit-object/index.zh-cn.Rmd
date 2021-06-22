@@ -1,0 +1,14 @@
+---
+title: Python为什么要继承object
+author: limbo
+date: '2021-06-22'
+slug: python_Inherit_object
+categories:
+  - python
+  - learn
+tags:
+  - python
+description: ~
+image: ~
+math: ~
+---

@@ -9,7 +9,7 @@ categories:
 tags:
   - python
 description: ~
-image: ~
+image: shujujigou.png
 math: ~
 ---
 链表是由一组连续或者不连续的节点组成的数据类型，链表通常分为三类：
@@ -140,12 +140,11 @@ link_list.add(6)
 for i in link_list.items():
   print(i, end="\t")
 
-# 链表插入数据
 link_list.insert(3, 9)
 
 print("\n", list(link_list.items()))
 
-# 删除链表数据
+
 link_list.remove(0)
 
 print(link_list.find(4))
