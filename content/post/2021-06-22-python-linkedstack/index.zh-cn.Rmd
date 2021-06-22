@@ -149,3 +149,5 @@ link_list.remove(0)
 
 print(link_list.find(4))
 ```
+
+## 双向链表
