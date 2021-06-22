@@ -1,0 +1,152 @@
+---
+title: python数据结构(链表)
+author: limbo
+date: '2021-06-22'
+slug: python_linkedStack
+categories:
+  - python
+  - learn
+tags:
+  - python
+description: ~
+image: ~
+math: ~
+---
+链表是由一组连续或者不连续的节点组成的数据类型，链表通常分为三类：
+
+* 单链表
+
+* 双向链表
+
+* 循环链表
+
+![](https://gitee.com/limbo1996/picgo/raw/master/png/20210622101433.png)
+
+## 单链表
+单链表是最简单的, 实现形式就是由多个节点的集和共同组成一个线性结构，每个节点有两个成员：
+
+  * 元素成员，引用一个任意的对象
+  * 一个指针，指向后继结构
+
+
+链表的第一个和最后一个节点被称为**头节点**和**尾节点**，从头节点开始通过每一个节点的`Next`，可以从一个节点到另一个节点，最终到达尾节点，一个节点的`next`指向`NULL`时，我们可以确定这个节点就是尾节点。这个过程成为**遍历链表**。
+
+### 代码实现
+```{python}
+# 定义节点
+class Node:
+  
+  def __init__(self, item):
+    # item 存放数据
+    self.item = item
+    # next 指向下一个节点
+    self.next = None
+
+# 定义链表
+class SingleLinkStack:
+  """单链表"""
+  def __init__(self):
+    self._head = None
+  
+  def is_empty(self):
+    return self._head is None
+  
+  def length(self):
+    """链表长度"""
+    
+    cur = self._head
+    count = 0
+    while cur is not None:
+      count += 1
+      cur = cur.next
+    return count
+  
+  def items(self):
+    """遍历链表"""
+    cur = self._head
+    while cur is not None:
+      yield cur.item
+      
+      cur = cur.next
+  
+  def add(self, item):
+    """向链表头部添加元素"""
+    
+    node = Node(item)
+    node.next = self._head
+    self._head = node
+    
+  def append(self, item):
+    """尾部添加元素"""
+    
+    node = Node(item)
+    
+    if self.is_empty():
+      # 空链表，_head指向新节点
+      self._head = node
+    else:
+      # 非空链表，找到尾部，将尾部的next节点指向新节点
+      cur = self._head
+      while cur.next is not None:
+        cur = cur.next
+      cur.next = node
+  def insert(self, index, item):
+    # 指定位置在头部，直接在头部插入
+    if index <= 0:
+      self.add(item)
+    # 指定位置在尾部，直接在尾部插入
+    elif index > (self.length() - 1):
+      self.append(item)
+    else:
+      node = Node(item)
+      cur = self._head 
+      # 循环到需要插入的位置
+      for i in range(index - 1):
+        cur = cur.next
+      node.next = cur.next
+      cur.next = node
+  
+  def remove(self, item):
+    """删除节点"""
+    
+    cur = self._head
+    pre = None
+    while cur is not None:
+      # 找到指定元素
+      if cur.item == item:
+        if not pre:
+          self._head = cur.next
+        else:
+          # 将删除位置的前一个节点的next指向删除位置的后一个节点
+          pre.next = cur.next
+        return True
+      else:
+        pre = cur
+        cur = cur.next
+      
+  def find(self, item):
+    return item in self.items()
+```
+```{python}
+link_list = SingleLinkStack()
+
+# 向链表尾部添加数据
+for i in range(5):
+  link_list.append(i)
+
+link_list.add(6)
+
+# 遍历链表数据
+for i in link_list.items():
+  print(i, end="\t")
+
+# 链表插入数据
+link_list.insert(3, 9)
+
+print("\n", list(link_list.items()))
+
+# 删除链表数据
+link_list.remove(0)
+
+print(link_list.find(4))
+```
