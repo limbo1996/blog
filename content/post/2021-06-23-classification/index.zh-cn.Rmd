@@ -8,7 +8,6 @@ categories:
   - ML
   - python
 tags:
-  - learn
   - python
 description: ~
 image: fenlei.png
