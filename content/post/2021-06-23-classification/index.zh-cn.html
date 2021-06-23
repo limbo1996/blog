@@ -11,10 +11,55 @@ tags:
   - learn
   - python
 description: ~
-image: ~
+image: fenlei.png
 math: ~
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<p>分类器用到的数据为<code>MNIST</code>,一个包含70000张图片的数据集</p>
+<div id="数据加载" class="section level2">
+<h2>数据加载</h2>
+<pre class="python"><code>from sklearn.datasets import fetch_openml
+
+mnist = fetch_openml(&quot;mnist_784&quot;)</code></pre>
+<p>首先大概看一下数据</p>
+<pre class="python"><code>x, y = mnist[&quot;data&quot;], mnist[&quot;target&quot;]
+x.shape</code></pre>
+<pre><code>## (70000, 784)</code></pre>
+<pre class="python"><code>y.shape</code></pre>
+<pre><code>## (70000,)</code></pre>
+<p>这里有70000张图，每张图有784个特征，这是因为每张图是由<code>28 * 28</code>个像素组成的，每个像素的取值从0到255不等。</p>
+<pre class="python"><code>import matplotlib
+import matplotlib.pyplot as plt
+
+some_digit = x[36000]
+some_digit_image = some_digit.reshape(28, 28)
+
+plt.imshow(some_digit_image, cmap = matplotlib.cm.binary,
+          interpolation = &quot;nearest&quot;)</code></pre>
+<pre><code>## &lt;matplotlib.image.AxesImage object at 0x000000006B618F40&gt;</code></pre>
+<pre class="python"><code>plt.axis(&quot;off&quot;)</code></pre>
+<pre><code>## (-0.5, 27.5, 27.5, -0.5)</code></pre>
+<pre class="python"><code>plt.show()</code></pre>
+<p><img src="/post/2021-06-23-classification/index.zh-cn_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+可以看到数字是9，看一下label</p>
+<pre class="python"><code>y[36000]</code></pre>
+<pre><code>## &#39;9&#39;</code></pre>
+<p>同样是9</p>
+<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210623204748.png" /></p>
+<p>上图是数据集中的突变的情况。</p>
+<p>在详细的观察数据之前，首先先要把测试集分出来, 然后将训练集打乱</p>
+<pre class="python"><code>import numpy as np
+
+x_train, x_test, y_train, y_test = x[:60000], x[60000:], y[:60000], y[60000:]
+
+shuffle_index = np.random.permutation(60000)
+
+x_train, y_train = x_train[shuffle_index], y_train[shuffle_index]</code></pre>
+</div>
+<div id="train-a-binary-classifier" class="section level2">
+<h2>Train a Binary Classifier</h2>
+<p>首先现在一个数字上简单的进行测试</p>
+</div>
