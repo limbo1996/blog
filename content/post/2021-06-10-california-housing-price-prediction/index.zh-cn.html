@@ -97,7 +97,7 @@ housing.hist(bins=50, figsize=(20, 15))</code></pre>
 ## The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
 ##   if ax.is_first_col():</code></pre>
 <pre class="python"><code>plt.show()</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-7-1.png" width="1920" /></p>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-1-1.png" width="1920" /></p>
 </div>
 <div id="划分训练集和测试集" class="section level2">
 <h2>划分训练集和测试集</h2>
@@ -147,9 +147,10 @@ train_set, test_set = train_test_split(housing, test_size = 0.2, random_state = 
 <pre class="python"><code>housing[&quot;income_cat&quot;] = np.ceil(housing[&quot;median_income&quot;] / 1.5)
 housing[&quot;income_cat&quot;].where(housing[&quot;income_cat&quot;] &lt; 5, 5.0, inplace = True)
 # where满足条件的保留原始值， False的替换为5， inplace指在原数据上操作而不是数据的拷贝</code></pre>
-<pre class="python"><code>housing.income_cat.hist()
-plt.show()</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-14-1.png" width="1920" />
+<pre class="python"><code>housing.income_cat.hist()</code></pre>
+<pre><code>## &lt;AxesSubplot:&gt;</code></pre>
+<pre class="python"><code>plt.show()</code></pre>
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-1-3.png" width="1920" />
 之后即可使用构建好的收入变量分类，使用<code>sklearn</code>中的函数</p>
 <pre class="python"><code>from sklearn.model_selection import StratifiedShuffleSplit
 
@@ -210,11 +211,11 @@ train_set.head()</code></pre>
 <p>查看数据的经纬度分布</p>
 <pre class="python"><code>housing = train_set.copy()
 housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;, y = &quot;latitude&quot;)</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-1-5.png" width="672" />
 数据分布类似加州地图，可以通过改变<code>alpha</code>参数来改变点的透明度来观察数据的密度</p>
 <pre class="python"><code>housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;,
              y = &quot;latitude&quot;, alpha = 0.1)</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-1-7.png" width="672" />
 更进一步添加人口， 房价等信息</p>
 <pre class="python"><code>housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;,
              y = &quot;latitude&quot;, alpha = 0.4,
@@ -222,7 +223,7 @@ housing.plot(kind=&quot;scatter&quot;, x = &quot;longitude&quot;, y = &quot;lati
             label = &quot;population&quot;, figsize = (10, 7),
             c=&quot;median_house_value&quot;, cmap=plt.get_cmap(&quot;jet&quot;),
             colorbar=True)</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-20-1.png" width="960" />
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-1-9.png" width="960" />
 点的大小代表了人口，颜色代表了房价，可以观察到靠近海的地方房价比较高，除此之外人口数量也与房价有关。
 接下来计算各个属性之间的相关性。</p>
 </div>
@@ -267,7 +268,7 @@ scatter_matrix(housing[attributes], figsize=(12, 8))# 按照挑选出来的信�
 ##       dtype=object)</code></pre>
 <p>从计算的相关性我们可以看到，最高的是<code>median_income</code>，将其单独拿出来观察。</p>
 <pre class="python"><code>housing.plot(kind=&quot;scatter&quot;, x = &quot;median_income&quot;, y=&quot;median_house_value&quot;, alpha = 0.1)</code></pre>
-<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<p><img src="/post/2021-06-10-california-housing-price-prediction/index.zh-cn_files/figure-html/unnamed-chunk-1-11.png" width="672" />
 构建一些新的变量, 然后观察这些变量的相关性</p>
 <pre class="python"><code>housing[&quot;rooms_per_household&quot;] = housing[&quot;total_rooms&quot;]/housing[&quot;households&quot;]
 housing[&quot;bedrooms_per_room&quot;] = housing[&quot;total_bedrooms&quot;]/housing[&quot;total_rooms&quot;]
@@ -428,20 +429,27 @@ housing_cat_1hot</code></pre>
 <p>虽然<code>Scikit-Learn</code>已经提供了大量的<code>transformers</code>，但是有时候需要写你自己的转换<code>transformers</code>。而构建自己的<code>transformers</code>只需要完成最低三个属性<code>fit()</code>, <code>transform()</code>, <code>fit_transform()</code>即可
 实例</p>
 <pre class="python"><code>from sklearn.base import BaseEstimator, TransformerMixin
+
 rooms_ix, bedrooms_ix, population_ix, household_ix = 3, 4, 5, 6
+
 class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
-  def __init__(self, add_bedrooms_per_room = True): # no *args or **kargs
-    self.add_bedrooms_per_room = add_bedrooms_per_room
-  def fit(self, X, y=None):
-    return self # nothing else to do  
-  def transform(self, X, y=None):
-    rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
-    population_per_household = X[:, population_ix] / X[:, household_ix]
-    if self.add_bedrooms_per_room:
-      bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
-      return np.c_[X, rooms_per_household, population_per_household,bedrooms_per_room]
-    else:
-      return np.c_[X, rooms_per_household, population_per_household]</code></pre>
+    def __init__(self, add_bedrooms_per_room = True):
+        self.add_bedrooms_per_room = add_bedrooms_per_room
+        
+    def fit(self, X, y=None):
+        return self # nothing else to do  
+      
+    def transform(self, X, y=None):
+        rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
+        
+        population_per_household = X[:, population_ix] / X[:, household_ix]
+        
+        if self.add_bedrooms_per_room:
+          bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
+          
+          return np.c_[X, rooms_per_household, population_per_household,bedrooms_per_room]
+        else:
+          return np.c_[X, rooms_per_household, population_per_household]</code></pre>
 </div>
 <div id="feature-scaling" class="section level2">
 <h2>Feature Scaling</h2>
@@ -452,10 +460,86 @@ class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
 <li>min-max scaling</li>
 </ul>
 <p>就是标准化，将数据的分布映射到0到1， 算法就是减去最小值除以最大值，<code>Scikit-Learn</code>提供了
-<code>MinMaxScaler</code>
-* standardization</p>
+<code>MinMaxScaler</code></p>
+<ul>
+<li>standardization</li>
+</ul>
 <p>减去平均值除以方差，生成的数据的分布并不一定是0到1</p>
+<div id="pipeline" class="section level3">
+<h3>pipeline</h3>
+<p>当然也可以直接写一个pipeline一步完成上述的数据预处理</p>
+<pre class="python"><code>from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+class DataFrameSelector(BaseEstimator, TransformerMixin):
+    def __init__(self, attribute_names):
+        self.attribute_names = attribute_names
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X):
+        return X[self.attribute_names].values
+
+num_attribs = list(housing_num)
+cat_attribs = [&quot;ocean_proximity&quot;]
+
+num_pipeline = Pipeline([
+        (&#39;selector&#39;, DataFrameSelector(num_attribs)),
+        (&#39;imputer&#39;, SimpleImputer(strategy=&quot;median&quot;)),
+        (&#39;attribs_adder&#39;, CombinedAttributesAdder()),
+        (&#39;std_scaler&#39;, StandardScaler()),
+])
+
+cat_pipeline = Pipeline([
+        (&#39;selector&#39;, DataFrameSelector(cat_attribs)),
+        (&#39;one_hot_encoder&#39;, OneHotEncoder(sparse=False)),
+])
+&#39;&#39;&#39;
+然后可以将两个pipeline拼接
+&#39;&#39;&#39;</code></pre>
+<pre><code>## &#39;\n然后可以将两个pipeline拼接\n&#39;</code></pre>
+<pre class="python"><code>from sklearn.pipeline import FeatureUnion
+
+full_pipeline = FeatureUnion(transformer_list=[
+        (&quot;num_pipeline&quot;, num_pipeline),
+        (&quot;cat_pipeline&quot;, cat_pipeline),
+])</code></pre>
+<pre class="python"><code>housing.head()</code></pre>
+<pre><code>##        longitude  latitude  ...  bedrooms_per_room  population_per_household
+## 13643    -117.33     34.06  ...           0.203552                  3.496403
+## 11573    -118.00     33.77  ...           0.201662                  2.602273
+## 20322    -119.14     34.23  ...           0.308642                  1.275000
+## 16484    -121.06     38.25  ...           0.156682                  2.894231
+## 12136    -117.13     33.89  ...           0.148355                  3.273810
+## 
+## [5 rows x 12 columns]</code></pre>
+<pre class="python"><code>housing_prepared = full_pipeline.fit_transform(housing)
+housing_prepared</code></pre>
+<pre><code>## array([[ 1.12238154, -0.73916342,  1.54019195, ...,  0.        ,
+##          0.        ,  0.        ],
+##        [ 0.78812581, -0.87470615, -0.3699156 , ...,  0.        ,
+##          0.        ,  0.        ],
+##        [ 0.21939218, -0.65970734, -1.64332064, ...,  0.        ,
+##          0.        ,  1.        ],
+##        ...,
+##        [ 0.77315913, -0.73916342, -0.3699156 , ...,  0.        ,
+##          0.        ,  0.        ],
+##        [-0.09490798,  0.56952498, -1.72290845, ...,  0.        ,
+##          0.        ,  0.        ],
+##        [ 0.87792585, -0.93546668, -0.84744249, ...,  0.        ,
+##          0.        ,  0.        ]])</code></pre>
+</div>
 </div>
 <div id="select-and-train-a-model" class="section level2">
 <h2>Select and Train a Model</h2>
+<div id="training-and-evaluating-on-the-training-set" class="section level3">
+<h3>Training and Evaluating on the Training Set</h3>
+<p>首先用到的是线性回归模型</p>
+<pre class="python"><code>from sklearn.linear_model import LinearRegression
+
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared, housing_label)</code></pre>
+<pre><code>## LinearRegression()</code></pre>
+<p>这样就训练出了一个线性回归模型，接下来在一些数据集上做一些测试。</p>
+</div>
 </div>

@@ -330,21 +330,21 @@ full_pipeline = FeatureUnion(transformer_list=[
 ```
 ```{python}
 housing.head()
-household_prepared = full_pipeline.fit_transform(housing)
-household_prepared
+housing_prepared = full_pipeline.fit_transform(housing)
+housing_prepared
 ```
 
 ## Select and Train a Model
 
 ### Training and Evaluating on the Training Set
-
+首先用到的是线性回归模型
 ```{python}
 from sklearn.linear_model import LinearRegression
 
-
 lin_reg = LinearRegression()
-lin_reg.fit()
+lin_reg.fit(housing_prepared, housing_label)
 ```
+这样就训练出了一个线性回归模型，接下来在一些数据集上做一些测试。
 
 
 
