@@ -1,0 +1,75 @@
+---
+title: python数据结构(查找算法)
+author: limbo
+date: '2021-06-22'
+slug: python_data_structure_find
+categories:
+  - learn
+  - python
+tags:
+  - learn
+  - python
+description: ~
+image: shujujiegou.png
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>通过下表按照顺序来访问和查找数据项的方法称为<strong>顺序查找</strong>。
+<img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210623093743.png" />
+首先从列表的第一个元素开始，按照下标增长的顺序，逐个对比数据项，
+如果最后一个都没发现要查找的项，那么查找失败。</p>
+<pre class="python"><code>def sequentialSearch(alist, item):
+  pos = 0
+  found = False
+  
+  while pos &lt; len(alist) and not found:
+    if alist[pos] == item:
+      found = True
+    else:
+      pos = pos + 1
+    
+  return found
+
+test = [1, 2, 43, 32, 17, 13, 0]
+
+sequentialSearch(test, 3)</code></pre>
+<pre><code>## False</code></pre>
+<pre class="python"><code>sequentialSearch(test, 13)</code></pre>
+<pre><code>## True</code></pre>
+<p>在顺序查找算法中，数据项是否在，比对的次数是不一样的：</p>
+<ul>
+<li><p>如果数据项不在列表中，需要比对所有的数据才能得知，比对次数是<code>n</code>。</p></li>
+<li><p>如果数据项在列表中，要比对的次数，就比较复杂。</p></li>
+</ul>
+<p>顺序查找的算法的复杂度是<code>O(n)</code>。</p>
+<p>在这里，我们是假设列表并没有排序，各项出现在各个位置的几率是一样的，如果将列表排序
+<img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210623103949.png" />
+当数据存在时，比对的过程和无序表是完全相同的。
+不同的是数据项不存在时，有序表的比对可以提前结束，比如想要查找数据<code>50</code>，当看到<code>54</code>时，就可以提前结束了。</p>
+<pre class="python"><code>def orderedSeqSearch(alist, item):
+  pos = 0
+  found = False
+  stop = False
+  
+  while pos &lt; len(alist) and not found and not stop:
+    if alist[pos] == item:
+      found = True
+    else:
+      if alist[pos] &gt; item:
+        stop = True
+      
+      else:
+        pos += 1
+        
+  return found 
+
+testlist = [0, 1, 2, 8, 9, 10, 12, 23, 76]
+
+orderedSeqSearch(testlist, 3)</code></pre>
+<pre><code>## False</code></pre>
+<pre class="python"><code>orderedSeqSearch(testlist, 10)</code></pre>
+<pre><code>## True</code></pre>
+<p>这时的算法复杂度还是<code>O(n)</code>, 只是在有些数据项不存在时，有序表的顺序查找能够节省一些次数。</p>

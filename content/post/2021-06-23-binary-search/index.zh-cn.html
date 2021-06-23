@@ -1,0 +1,64 @@
+---
+title: 二分查找
+author: limbo
+date: '2021-06-23'
+slug: Binary_search
+categories:
+  - learn
+  - python
+tags:
+  - python
+  - learn
+description: ~
+image: erfenchazhao.jpg
+math: ~
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>前面讲到的对于有序表，顺序查找的算法并不是十分出色。
+在顺序查找中，如果第一个数据项不匹配查找项的话，还有<code>n-1</code>个待比对的数据项。</p>
+<p>二分查找就可以有效的利用<code>有序表</code>的特征，迅速缩小待比对的数据项的范围。</p>
+<p>二分查找即从列表的中间开始比对，如果列表中间的项匹配查找项，则查找结束；如果不匹配，那就有两种情况：</p>
+<ul>
+<li><p>中间项比查找项大，则查找项只可能出现在前半部分</p></li>
+<li><p>中间项比查找项小，则查找项只可能出现在后半部分</p></li>
+</ul>
+<p>无论如何，都会将范围一次缩小了一半，然后继续上面的步骤，每次缩小一半。</p>
+<pre class="python"><code>def binarySearch(alist, item):
+  first = 0
+  last = len(alist) - 1
+  found = False
+  
+  while first &lt;= last and not found:
+    midpoint = (first + last) // 2
+    if alist[midpoint] == item:
+      found = True
+    else:
+      if item &lt; alist[midpoint]:
+        last = midpoint - 1
+      else:
+        first = midpoint + 1
+  return found
+
+test = [0, 1, 2, 3, 5, 8, 32, 42]
+binarySearch(test, 3)</code></pre>
+<pre><code>## True</code></pre>
+<pre class="python"><code>binarySearch(test, 13)</code></pre>
+<pre><code>## False</code></pre>
+<p>二分查找算法实际上体现的是将问题不断分解为更小的问题的方法，通过解决一个小规模的问题，将结果汇总，得到原问题的解。</p>
+<p>显然，递归算法也是一种典型的分解问题的策略，二分法也适合用递归算法来实现。</p>
+<pre class="python"><code>def binarySearch(alist, item):
+  if len(alist) == 0:
+    return False
+  else:
+    midpoint = len(list) // 2
+    if alist[midpoint] == item:
+      return True
+    else:
+      if item &lt; alist[midpoint]:
+        return binarySearch(alist[:mispoint], item)
+      else:
+        return binarySearch(alist[midpoint:], item)</code></pre>
+<p>二分查找算法的复杂度是<code>O(log n)</code>, 但是还有一个因素需要注意，我们对列表进行了切片，切片操作的复杂度为<code>O(k)</code>(k为参数的数量)， 这样会使得整个算法的时间复杂度稍有增加。</p>
