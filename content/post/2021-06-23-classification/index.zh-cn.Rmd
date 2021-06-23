@@ -43,6 +43,7 @@ plt.imshow(some_digit_image, cmap = matplotlib.cm.binary,
 plt.axis("off")
 plt.show()
 ```
+
 可以看到数字是9，看一下label
 ```{python}
 y[36000]
