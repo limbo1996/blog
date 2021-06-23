@@ -8,57 +8,13 @@ categories:
   - ML
   - python
 tags:
-  - python
   - learn
+  - python
 description: ~
-image: fenlei.png
+image: ~
 math: ~
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<div id="数据下载" class="section level2">
-<h2>数据下载</h2>
-<p>在这里用到的是<code>MNIST</code>数据集。<code>Scikit-Learn</code>提供了多种方法来下载数据。</p>
-<pre class="python"><code>from sklearn.datasets import fetch_openml
-mnist = fetch_openml(&quot;mnist_784&quot;)</code></pre>
-<p>详细的看一下这些信息</p>
-<pre class="python"><code>x, y = mnist[&quot;data&quot;], mnist[&quot;target&quot;]
-
-x.shape</code></pre>
-<pre><code>## (70000, 784)</code></pre>
-<pre class="python"><code>y.shape</code></pre>
-<pre><code>## (70000,)</code></pre>
-<p>一共有70000张图，每一张图有784个特征，这是因为每一张图由<code>28 * 28</code>像素组成。每一个特征代表的是一个像素的强度，从0到255不等，熟悉越多代表越黑。</p>
-<pre class="python"><code>import matplotlib
-import matplotlib.pyplot as plt
-
-some_digit = x[36000]
-some_digit_image = some_digit.reshape(28, 28)
-
-plt.imshow(some_digit_image, cmap = matplotlib.cm.binary,
-          interpolation = &quot;nearest&quot;)
-          </code></pre>
-<pre><code>## &lt;matplotlib.image.AxesImage object at 0x000000000F1B7130&gt;</code></pre>
-<pre class="python"><code>plt.axis(&quot;off&quot;)</code></pre>
-<pre><code>## (-0.5, 27.5, 27.5, -0.5)</code></pre>
-<pre class="python"><code>plt.show()</code></pre>
-<p><img src="/post/2021-06-23-classification/index.zh-cn_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<pre class="python"><code>y[36000]</code></pre>
-<pre><code>## &#39;9&#39;</code></pre>
-<p>可以看到这个图的<code>lable</code>是9。</p>
-<p><img src="https://gitee.com/limbo1996/picgo/raw/master/png/20210623204748.png" /></p>
-<p>这个图可以看一下这些图的复杂性。</p>
-</div>
-<div id="划分测试集" class="section level2">
-<h2>划分测试集</h2>
-<p>在仔细地观察数据之前，先划分出一个测试集</p>
-<pre class="python"><code>x_train, x_test, y_train, y_test = x[:60000], x[60000:], y[:60000], y[60000:]</code></pre>
-<p>打乱训练集</p>
-<pre class="python"><code>import numpy as np
-
-shuffle_index = np.random.permutation(60000)
-
-x_train, y_train = x_train[shuffle_index], y_train[shuffle_index]</code></pre>
-</div>
