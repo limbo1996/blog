@@ -66,4 +66,4 @@ x_train, y_train = x_train[shuffle_index], y_train[shuffle_index]
 
 ## Train a Binary Classifier
 
-首先现在一个数字上简单的进行测试
+首先现在一个数字上简单的进行测试, 

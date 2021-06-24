@@ -8,7 +8,6 @@ categories:
   - ML
   - python
 tags:
-  - learn
   - python
 description: ~
 image: fenlei.png
@@ -39,12 +38,12 @@ some_digit_image = some_digit.reshape(28, 28)
 
 plt.imshow(some_digit_image, cmap = matplotlib.cm.binary,
           interpolation = &quot;nearest&quot;)</code></pre>
-<pre><code>## &lt;matplotlib.image.AxesImage object at 0x000000006B618F40&gt;</code></pre>
+<pre><code>## &lt;matplotlib.image.AxesImage object at 0x00000000657A8F40&gt;</code></pre>
 <pre class="python"><code>plt.axis(&quot;off&quot;)</code></pre>
 <pre><code>## (-0.5, 27.5, 27.5, -0.5)</code></pre>
 <pre class="python"><code>plt.show()</code></pre>
-<p><img src="/post/2021-06-23-classification/index.zh-cn_files/figure-html/unnamed-chunk-1-1.png" width="672" />
-可以看到数字是9，看一下label</p>
+<p><img src="/post/2021-06-23-classification/index.zh-cn_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>可以看到数字是9，看一下label</p>
 <pre class="python"><code>y[36000]</code></pre>
 <pre><code>## &#39;9&#39;</code></pre>
 <p>同样是9</p>
@@ -61,5 +60,5 @@ x_train, y_train = x_train[shuffle_index], y_train[shuffle_index]</code></pre>
 </div>
 <div id="train-a-binary-classifier" class="section level2">
 <h2>Train a Binary Classifier</h2>
-<p>首先现在一个数字上简单的进行测试</p>
+<p>首先现在一个数字上简单的进行测试,</p>
 </div>
