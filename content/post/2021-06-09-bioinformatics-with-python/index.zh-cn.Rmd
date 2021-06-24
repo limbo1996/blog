@@ -2,7 +2,7 @@
 title: Bioinformatics with Python
 author: wangxuan
 date: '2021-06-09'
-slug: index.zh-cn
+slug: Bioinformatics with Python
 categories:
   - python
 tags:

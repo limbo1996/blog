@@ -2,7 +2,7 @@
 title: Classification
 author: limbo
 date: '2021-06-23'
-slug: index.zh-cn
+slug: Classification
 categories:
   - learn
   - ML
