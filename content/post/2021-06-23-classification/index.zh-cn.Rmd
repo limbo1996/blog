@@ -1,31 +1,41 @@
 ---
-title: Classification
-author: limbo
+title: "Classification"
+author: "limbo"
 date: '2021-06-23'
-slug: Classification
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
 categories:
-  - learn
-  - ML
-  - python
-tags:
-  - python
-description: ~
+- learn
+- ML
+- python
+tags: python
+description: null
 image: fenlei.png
-math: ~
+math: null
+slug: Classification
 ---
 分类器用到的数据为`MNIST`,一个包含70000张图片的数据集
 
 ## 数据加载
 ```{python}
 from sklearn.datasets import fetch_openml
+import numpy as np
 
-mnist = fetch_openml("mnist_784")
+mnist = fetch_openml("mnist_784", as_frame = False)
 ```
+
 首先大概看一下数据
+
 ```{python}
 x, y = mnist["data"], mnist["target"]
 x.shape
+
 y.shape
+
+y = y.astype(np.int8)
 ```
 这里有70000张图，每张图有784个特征，这是因为每张图是由`28 * 28`个像素组成的，每个像素的取值从0到255不等。
 
@@ -66,4 +76,47 @@ x_train, y_train = x_train[shuffle_index], y_train[shuffle_index]
 
 ## Train a Binary Classifier
 
-首先现在一个数字上简单的进行测试, 
+首先现在一个数字上简单的进行测试
+```{python}
+y_train_9 = (y_train == 9)
+np.unique(y_train_9)
+y_test_9 = (y_test == 9)
+
+```
+### 随机梯度下降
+```{python}
+from sklearn.linear_model import SGDClassifier
+
+sgd_clf = SGDClassifier(random_state = 42)
+sgd_clf.fit(x_train, y_train_9)
+```
+
+```{python}
+sgd_clf.predict([some_digit])
+```
+#### performance measure
+
+##### Measuring Accuracy Using Cross-Validation
+
+```{python}
+from sklearn.model_selection import cross_val_score
+
+cross_val_score(sgd_clf, x_train, y_train_9, cv = 3, scoring = "accuracy")
+```
+```{python}
+from sklearn.base import BaseEstimator
+
+class Never9Classifier(BaseEstimator):
+  def fit(self, x, y = None):
+    pass
+  def predict(self, x):
+    return np.zeros((len(x), 1), dtype = bool) # zeros返回0， 然后转化为bool
+  
+never_9_clf = Never9Classifier()
+
+cross_val_score(never_9_clf, x_train, y_train_9, cv = 3, scoring = "accuracy")
+```
+可以看到当所有预测结果全部是`False`的时候还有90%的准确率，这是因为数字9只占了10%,所以当无论如何都预测`False`的时候，就有90%的正确率。
+##### Confusion Matrix
+
+
