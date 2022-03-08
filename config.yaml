@@ -75,7 +75,7 @@ params:
             adminLabel:
 
         utterances:
-            repo: imbo1996/blogtalks
+            repo: limbo1996/blogtalks
             issueTerm: pathname
             label:
 

@@ -37,7 +37,7 @@ params:
 
     comments:
         enabled: false
-        provider: disqus
+        provider: utterances
 
         disqusjs:
             shortname:
@@ -47,7 +47,7 @@ params:
             adminLabel:
 
         utterances:
-            repo:
+            repo: limbo1996/blogtalks
             issueTerm: pathname
             label:
 
