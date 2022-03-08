@@ -1,6 +1,6 @@
 baseurl: https://example.com
 languageCode: en-us
-theme: "hugo-theme-stack"
+theme: hugo-theme-stack
 paginate: 5
 title: Example Site
 
@@ -13,11 +13,6 @@ languages:
         languageName: 中文
         title: 演示站点
         weight: 2
-    ar:
-        languageName: عربي
-        languagedirection: rtl
-        title: موقع تجريبي
-        weight: 3
 
 # Change it to your Disqus shortname before using
 disqusShortname: hugo-theme-stack
@@ -54,11 +49,11 @@ params:
 
     sidebar:
         emoji: 🍥
-        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        subtitle: 老渔民
         avatar:
             enabled: true
             local: true
-            src: img/avatar.png
+            src: img/test.png
 
     article:
         math: false
@@ -70,7 +65,7 @@ params:
 
     comments:
         enabled: true
-        provider: disqus
+        provider: utterances
 
         disqusjs:
             shortname:
@@ -80,7 +75,7 @@ params:
             adminLabel:
 
         utterances:
-            repo:
+            repo: imbo1996/blogtalks
             issueTerm: pathname
             label:
 
@@ -197,9 +192,10 @@ menu:
     social:
         - identifier: github
           name: GitHub
-          url: https://github.com/CaiJimmy/hugo-theme-stack
+          url: https://github.com/limbo1996
           params:
               icon: brand-github
+
 
 related:
     includeNewer: true
