@@ -19,7 +19,7 @@ comments: yes
 
 下面使用`ggplot2`中的`diamonds`数据做演示。
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 library(plotly)
 library(dplyr)
 library(magrittr)
@@ -33,10 +33,13 @@ data(diamonds, package = "ggplot2")
 
 ```{r message=FALSE, warning=FALSE}
 # plotly tries to find a sensible geometrix
-plotly::plot_ly(diamonds, x = ~cut)
-plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)
-plotly::plot_ly(diamonds, x = ~cut, color = ~clarity, 
+p1 <- plotly::plot_ly(diamonds, x = ~cut)
+p2 <- plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)
+p3 <- plotly::plot_ly(diamonds, x = ~cut, color = ~clarity, 
         colors = "Accent")
+print(p1)
+print(p2)
+print(p3)
 ```
 
 `plot_ly`有大量的参数可以方便的调整你的图表，但是与`ggplot2`不同的是，如果你直接定义可视范围(如下图一),并不会得到你想要的结果，这里需要使用`I()`，声明该值位**Asls**。结果如下图二。
