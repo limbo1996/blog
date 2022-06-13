@@ -19,7 +19,7 @@ comments: yes
 
 下面使用`ggplot2`中的`diamonds`数据做演示。
 
-```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 library(plotly)
 library(dplyr)
 library(magrittr)
@@ -31,7 +31,7 @@ data(diamonds, package = "ggplot2")
 
 我们只需要将变量的名字映射给可视化的参数，`plot_ly()`可以自动尝试寻找合适个图形来展示数据。
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # plotly tries to find a sensible geometrix
 plotly::plot_ly(diamonds, x = ~cut)
 plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)
@@ -41,7 +41,7 @@ plotly::plot_ly(diamonds, x = ~cut, color = ~clarity,
 
 `plot_ly`有大量的参数可以方便的调整你的图表，但是与`ggplot2`不同的是，如果你直接定义可视范围(如下图一),并不会得到你想要的结果，这里需要使用`I()`，声明该值位**Asls**。结果如下图二。
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # doesn't produce black bars
 plotly::plot_ly(diamonds, x = ~cut, color = "black")
 # produces red bars with black outline
@@ -58,7 +58,7 @@ plotly::plot_ly(
 
 `plotly`包使用了纯粹的分层图形语法，大量的函数都将`plotly`对象作为第一个参数。接下来使用一个`layout`例子来演示。
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # modify 
 plotly::layout(
   plot_ly(diamonds, x = ~cut),
@@ -70,7 +70,7 @@ plotly::layout(
 
 然而这样的表现形式随着图形复杂度的上升，会显得十分臃肿。随意`plotly`包同样支持管道操作。
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 diamonds %>% 
   plotly::plot_ly(x = ~cut) %>% 
   plotly::layout(title = "My beatiful histogram")
