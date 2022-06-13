@@ -1,0 +1,46 @@
+---
+title: plotly.js介绍
+author: Limbo
+date: '2022-06-13'
+slug: plotly-js
+categories:
+  - R
+  - 可视化
+tags:
+  - R
+  - 可视化
+description: ~
+image: ~
+math: ~
+license: ~
+hidden: no
+comments: yes
+---
+
+<script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="简要工作流程" class="section level2">
+<h2>简要工作流程</h2>
+<p>在创建<code>plotly</code>图像的时候，<code>plotly_build()</code>函数先将<code>plot_ly</code>的内容转换为一个<code>R list</code> 然后<code>plotly_json()</code>函数将其转换为<code>JSON</code>格式之后渲染为网络图片。具体流程如下图。 <img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613155204.png" /> ## plotly_json <code>plotly_json</code>将内容转化为<code>JSON</code>格式</p>
+<p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613160330.png" /> 在<code>plotly.js</code>中，一张图片包含两个重要组成部分:</p>
+<ul>
+<li><p>data(又叫trace)</p></li>
+<li><p>layout</p></li>
+</ul>
+<div id="data" class="section level3">
+<h3>data</h3>
+<p>data定义的是数据和图之间的映射关系，每一个data下必须要有一个<code>type</code> 定义了映射的图表类型以及其它参数。</p>
+<pre class="r"><code>b &lt;- plotly_build(p)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
+<pre class="r"><code>length(b$x$data)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<pre class="r"><code>purrr::map_chr(b$x$data, &quot;name&quot;)</code></pre>
+<pre><code>## [1] &quot;IF&quot;   &quot;VVS1&quot; &quot;VVS2&quot; &quot;VS1&quot;  &quot;VS2&quot;  &quot;SI1&quot;  &quot;SI2&quot;  &quot;I1&quot;</code></pre>
+<pre class="r"><code>unique(purrr::map_chr(b$x$data, &quot;type&quot;))</code></pre>
+<pre><code>## [1] &quot;histogram&quot;</code></pre>
+<p>再然后，我们会发现<code>color</code>和<code>colors</code>在<code>plotly_build()</code> 的结果中并没有，这是因为build函数已经将其转换为了<code>plotly.js</code>所需要的信息 (<code>marker.color</code> 等)。</p>
+</div>
+</div>

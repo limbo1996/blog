@@ -1,0 +1,49 @@
+---
+title: plotly.js介绍
+author: Limbo
+date: '2022-06-13'
+slug: plotly-js
+categories:
+  - R
+  - 可视化
+tags:
+  - R
+  - 可视化
+description: ~
+image: ~
+math: ~
+license: ~
+hidden: no
+comments: yes
+---
+
+## 简要工作流程
+
+在创建`plotly`图像的时候，`plotly_build()`函数先将`plot_ly`的内容转换为一个`R list` 然后`plotly_json()`函数将其转换为`JSON`格式之后渲染为网络图片。具体流程如下图。 ![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613155204.png) ## plotly_json `plotly_json`将内容转化为`JSON`格式
+
+```{r include=FALSE}
+library(plotly)
+p <- plot_ly(diamonds, x = ~cut,
+             color = ~clarity,
+             colors = "Accent")
+plotly_json(p)
+```
+
+![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613160330.png) 在`plotly.js`中，一张图片包含两个重要组成部分:
+
+-   data(又叫trace)
+
+-   layout
+
+### data
+
+data定义的是数据和图之间的映射关系，每一个data下必须要有一个`type` 定义了映射的图表类型以及其它参数。
+
+```{r}
+b <- plotly_build(p)
+length(b$x$data)
+purrr::map_chr(b$x$data, "name")
+unique(purrr::map_chr(b$x$data, "type"))
+```
+
+再然后，我们会发现`color`和`colors`在`plotly_build()` 的结果中并没有，这是因为build函数已经将其转换为了`plotly.js`所需要的信息 (`marker.color` 等)。
