@@ -15,9 +15,11 @@ hidden: no
 comments: yes
 ---
 
-`plotly`包是一个可以直接绘制可交互图表的R包，下面使用`ggplot2`中的`diamonds`数据做演示。
+`plotly`包是一个可以直接绘制可交互图表的R包。
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+下面使用`ggplot2`中的`diamonds`数据做演示。
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 library(plotly)
 library(dplyr)
 library(magrittr)
@@ -25,13 +27,15 @@ library(magrittr)
 data(diamonds, package = "ggplot2")
 ```
 
+## plot_ly()
+
 我们只需要将变量的名字映射给可视化的参数，`plot_ly()`可以自动尝试寻找合适个图形来展示数据。
 
 ```{r}
 # plotly tries to find a sensible geometrix
-plot_ly(diamonds, x = ~cut)
-plot_ly(diamonds, x = ~cut, y = ~clarity)
-plot_ly(diamonds, x = ~cut, color = ~clarity, 
+plotly::plot_ly(diamonds, x = ~cut)
+plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)
+plotly::plot_ly(diamonds, x = ~cut, color = ~clarity, 
         colors = "Accent")
 ```
 
@@ -39,9 +43,9 @@ plot_ly(diamonds, x = ~cut, color = ~clarity,
 
 ```{r}
 # doesn't produce black bars
-plot_ly(diamonds, x = ~cut, color = "black")
+plotly::plot_ly(diamonds, x = ~cut, color = "black")
 # produces red bars with black outline
-plot_ly(
+plotly::plot_ly(
   diamonds, 
   x = ~cut, 
   color = I("red"), 
@@ -49,6 +53,8 @@ plot_ly(
   span = I(2)
 )
 ```
+
+## layout
 
 `plotly`包使用了纯粹的分层图形语法，大量的函数都将`plotly`对象作为第一个参数。接下来使用一个`layout`例子来演示。
 
@@ -60,12 +66,14 @@ plotly::layout(
 )
 ```
 
+## 管道操作
+
 然而这样的表现形式随着图形复杂度的上升，会显得十分臃肿。随意`plotly`包同样支持管道操作。
 
 ```{r}
 diamonds %>% 
-  plot_ly(x = ~cut) %>% 
-  layout(title = "My beatiful histogram")
+  plotly::plot_ly(x = ~cut) %>% 
+  plotly::layout(title = "My beatiful histogram")
 ```
 
 除了`layout`之外，还有`add_*`族的一系列函数可以将数据渲染为几何对象。比如：
@@ -73,19 +81,19 @@ diamonds %>%
 ```{r}
 # use add_* functions 
 diamonds %>% 
-  plot_ly() %>% 
-  add_histogram(x = ~cut)
+  plotly::plot_ly() %>% 
+  plotly::add_histogram(x = ~cut)
 ```
 
 还可以和`dplyr`连用进行一些更加复杂的数据操作。
 
 ```{r}
 diamonds %>%
-  plot_ly(x = ~cut) %>% 
-  add_histogram() %>%
+  plotly::plot_ly(x = ~cut) %>% 
+  plotly::add_histogram() %>%
   group_by(cut) %>%
   summarise(n = n()) %>%
-  add_text(
+  plotly::add_text(
     text = ~scales::comma(n), # 定义内容
     # scales::comma 强制使用十进制显示数字,并三位添加一个逗号
     y = ~n, # 定义文字坐标轴位置
@@ -98,9 +106,9 @@ diamonds %>%
 
 ```{r}
 diamonds %>%
-  plot_ly(x = ~cut) %>% 
-  add_histogram() %>%
+  plotly::plot_ly(x = ~cut) %>% 
+  plotly::add_histogram() %>%
   group_by(cut) %>%
   summarise(n = n()) %>% 
-  plotly_data()
+  plotly::plotly_data()
 ```
