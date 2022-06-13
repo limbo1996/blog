@@ -22,7 +22,11 @@ comments: yes
 
 <div id="简要工作流程" class="section level2">
 <h2>简要工作流程</h2>
-<p>在创建<code>plotly</code>图像的时候，<code>plotly_build()</code>函数先将<code>plot_ly</code>的内容转换为一个<code>R list</code> 然后<code>plotly_json()</code>函数将其转换为<code>JSON</code>格式之后渲染为网络图片。具体流程如下图。 <img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613155204.png" /> ## plotly_json <code>plotly_json</code>将内容转化为<code>JSON</code>格式</p>
+<p>在创建<code>plotly</code>图像的时候，<code>plotly_build()</code>函数先将<code>plot_ly</code>的内容转换为一个<code>R list</code> 然后<code>plotly_json()</code>函数将其转换为<code>JSON</code>格式之后渲染为网络图片。具体流程如下图。 <img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613155204.png" /></p>
+</div>
+<div id="plotly_json" class="section level2">
+<h2>plotly_json</h2>
+<p><code>plotly_json</code>将内容转化为<code>JSON</code>格式</p>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613160330.png" /> 在<code>plotly.js</code>中，一张图片包含两个重要组成部分:</p>
 <ul>
 <li><p>data(又叫trace)</p></li>

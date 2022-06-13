@@ -19,7 +19,11 @@ comments: yes
 
 ## 简要工作流程
 
-在创建`plotly`图像的时候，`plotly_build()`函数先将`plot_ly`的内容转换为一个`R list` 然后`plotly_json()`函数将其转换为`JSON`格式之后渲染为网络图片。具体流程如下图。 ![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613155204.png) ## plotly_json `plotly_json`将内容转化为`JSON`格式
+在创建`plotly`图像的时候，`plotly_build()`函数先将`plot_ly`的内容转换为一个`R list` 然后`plotly_json()`函数将其转换为`JSON`格式之后渲染为网络图片。具体流程如下图。 ![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613155204.png)
+
+## plotly_json
+
+`plotly_json`将内容转化为`JSON`格式
 
 ```{r include=FALSE}
 library(plotly)
