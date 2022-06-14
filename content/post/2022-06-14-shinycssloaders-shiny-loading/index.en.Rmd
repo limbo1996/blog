@@ -27,7 +27,7 @@ comments: yes
 
 基础的使用如下
 
-```{r message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -43,7 +43,6 @@ server <- function(input, output) {
         plot(runif(10))
     })
 }
-shinyApp(ui, server)
 ```
 
 ![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220614100125.png) 如图所示，即可使用loading动画了。
