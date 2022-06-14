@@ -45,7 +45,9 @@ server <- function(input, output) {
 }
 ```
 
-![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220614100125.png) 如图所示，即可使用loading动画了。
+![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220614100125.png)
+
+如图所示，即可使用loading动画了。
 
 ## 样式
 
