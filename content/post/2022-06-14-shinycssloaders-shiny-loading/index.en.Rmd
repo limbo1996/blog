@@ -53,6 +53,6 @@ server <- function(input, output) {
 
 除了默认的动画样式，该包还有另外七中，使用`type`参数调整。同时`color`和`size`还可以调整颜色和大小 `withSpinner(plotOutput("myplot"), type = 5, color = "#0dc5c1", size = 2)`
 
-## 自定义 
+## 自定义
 
 该包同样支持自定义你的加载动画，使用`image`参数调整即可。
