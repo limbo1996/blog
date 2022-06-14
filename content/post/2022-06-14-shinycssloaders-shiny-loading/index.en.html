@@ -28,6 +28,23 @@ comments: yes
 <h2>使用方法</h2>
 <p>使用也十分简单，在完成安装后将shiny的output放在<code>withSpinner()</code>的调用中即可，在加载了管道操作符的情况下，同样可以使用管道操作<code>plotOutput("myplot") %&gt;% withSpinner()</code></p>
 <p>基础的使用如下</p>
+<pre class="r"><code>library(shiny)
+
+ui &lt;- fluidPage(
+    actionButton(&quot;go&quot;, &quot;Go&quot;),
+    shinycssloaders::withSpinner(
+        plotOutput(&quot;plot&quot;)
+    )
+)
+server &lt;- function(input, output) {
+    output$plot &lt;- renderPlot({
+        input$go
+        Sys.sleep(1.5)
+        plot(runif(10))
+    })
+}
+shinyApp(ui, server)</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220614100125.png" /> 如图所示，即可使用loading动画了。</p>
 </div>
 <div id="样式" class="section level2">

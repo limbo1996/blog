@@ -27,7 +27,7 @@ comments: yes
 
 基础的使用如下
 
-```{r include=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(shiny)
 
 ui <- fluidPage(
