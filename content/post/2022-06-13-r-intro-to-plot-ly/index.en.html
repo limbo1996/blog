@@ -16,34 +16,95 @@ comments: yes
 ---
 
 <script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
-<script src="{{< blogdown/postref >}}index.en_files/htmlwidgets/htmlwidgets.js"></script>
-<script src="{{< blogdown/postref >}}index.en_files/plotly-binding/plotly.js"></script>
-<script src="{{< blogdown/postref >}}index.en_files/typedarray/typedarray.min.js"></script>
-<script src="{{< blogdown/postref >}}index.en_files/jquery/jquery.min.js"></script>
-<link href="{{< blogdown/postref >}}index.en_files/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
-<script src="{{< blogdown/postref >}}index.en_files/crosstalk/js/crosstalk.min.js"></script>
-<link href="{{< blogdown/postref >}}index.en_files/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="{{< blogdown/postref >}}index.en_files/plotly-main/plotly-latest.min.js"></script>
 
 
 <p><code>plotly</code>包是一个可以直接绘制可交互图表的R包。</p>
 <p>下面使用<code>ggplot2</code>中的<code>diamonds</code>数据做演示。</p>
+<pre class="r"><code>library(plotly)
+library(dplyr)
+library(magrittr)
+
+data(diamonds, package = &quot;ggplot2&quot;)</code></pre>
 <div id="plot_ly" class="section level2">
 <h2>plot_ly()</h2>
 <p>我们只需要将变量的名字映射给可视化的参数，<code>plot_ly()</code>可以自动尝试寻找合适个图形来展示数据。</p>
+<pre class="r"><code># plotly tries to find a sensible geometrix
+plotly::plot_ly(diamonds, x = ~cut)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
+<pre class="r"><code>plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram2d&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram2d</code></pre>
+<pre class="r"><code>plotly::plot_ly(diamonds, x = ~cut, 
+                color = ~clarity, 
+                colors = &quot;Accent&quot;)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613152836.png" /></p>
 <p><code>plot_ly</code>有大量的参数可以方便的调整你的图表，但是与<code>ggplot2</code>不同的是，如果你直接定义可视范围(如下图一),并不会得到你想要的结果，这里需要使用<code>I()</code>，声明该值位<strong>Asls</strong>。结果如下图二。</p>
+<pre class="r"><code># doesn&#39;t produce black bars
+plotly::plot_ly(diamonds, x = ~cut, color = &quot;black&quot;)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
+<pre><code>## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): minimal value for n is 3, returning requested palette with 3 different levels
+
+## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): minimal value for n is 3, returning requested palette with 3 different levels</code></pre>
+<pre class="r"><code># produces red bars with black outline
+plotly::plot_ly(
+  diamonds, 
+  x = ~cut, 
+  color = I(&quot;red&quot;), 
+  stroke = I(&quot;black&quot;), 
+  span = I(2)
+)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613153325.png" /></p>
 </div>
 <div id="layout" class="section level2">
 <h2>layout</h2>
 <p><code>plotly</code>包使用了纯粹的分层图形语法，大量的函数都将<code>plotly</code>对象作为第一个参数。接下来使用一个<code>layout</code>例子来演示。</p>
+<pre class="r"><code># modify 
+plotly::layout(
+  plot_ly(diamonds, x = ~cut),
+  title = &quot;My beatiful histogram&quot;
+)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 </div>
 <div id="管道操作" class="section level2">
 <h2>管道操作</h2>
 <p>然而这样的表现形式随着图形复杂度的上升，会显得十分臃肿。随意<code>plotly</code>包同样支持管道操作。</p>
+<pre class="r"><code>diamonds %&gt;% 
+  plotly::plot_ly(x = ~cut) %&gt;% 
+  plotly::layout(title = &quot;My beatiful histogram&quot;)</code></pre>
+<pre><code>## No trace type specified:
+##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
+##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 <p>除了<code>layout</code>之外，还有<code>add_*</code>族的一系列函数可以将数据渲染为几何对象。比如：</p>
+<pre class="r"><code># use add_* functions 
+diamonds %&gt;% 
+  plotly::plot_ly() %&gt;% 
+  plotly::add_histogram(x = ~cut)</code></pre>
 <p>还可以和<code>dplyr</code>连用进行一些更加复杂的数据操作。</p>
+<pre class="r"><code>diamonds %&gt;%
+  plotly::plot_ly(x = ~cut) %&gt;% 
+  plotly::add_histogram() %&gt;%
+  group_by(cut) %&gt;%
+  summarise(n = n()) %&gt;%
+  plotly::add_text(
+    text = ~scales::comma(n), # 定义内容
+    # scales::comma 强制使用十进制显示数字,并三位添加一个逗号
+    y = ~n, # 定义文字坐标轴位置
+    textposition = &quot;top middle&quot;, 
+    cliponaxis = FALSE
+  )</code></pre>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613153521.png" /> 在处理数据和绘图的过程中，可以随时使用<code>plotly_data</code>来检查你的数据，以便于<code>debug</code>。</p>
 <pre class="r"><code>diamonds %&gt;%
   plotly::plot_ly(x = ~cut) %&gt;% 
