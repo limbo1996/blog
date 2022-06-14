@@ -1,0 +1,40 @@
+---
+title: shinycssloaders为Shiny添加Loading动画
+author: Limbo
+date: '2022-06-14'
+slug: shinycssloaders-shiny-loading
+categories:
+  - R
+  - Shiny
+tags:
+  - R
+  - Shiny
+description: ~
+image: ~
+math: ~
+license: ~
+hidden: no
+comments: yes
+---
+
+<script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
+
+
+<p>基础的Shiny的输出(图、表等等)在重新计算更新时，更新方式是变灰，然后更新为新的内容。为了好看可以添加Loading动画。<code>Shiny</code>内置了进度条功能，但是样式有些单一，<code>shinycssloaders</code>可以添加多样的loading动画样式。</p>
+<blockquote>
+<p><a href="https://daattali.com/shiny/shinycssloaders-demo/" class="uri">https://daattali.com/shiny/shinycssloaders-demo/</a></p>
+</blockquote>
+<div id="使用方法" class="section level2">
+<h2>使用方法</h2>
+<p>使用也十分简单，在完成安装后将shiny的output放在<code>withSpinner()</code>的调用中即可，在加载了管道操作符的情况下，同样可以使用管道操作<code>plotOutput("myplot") %&gt;% withSpinner()</code></p>
+<p>基础的使用如下</p>
+<p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220614100125.png" /> 如图所示，即可使用loading动画了。</p>
+</div>
+<div id="样式" class="section level2">
+<h2>样式</h2>
+<p>除了默认的动画样式，该包还有另外七中，使用<code>type</code>参数调整。同时<code>color</code>和<code>size</code>还可以调整颜色和大小 <code>withSpinner(plotOutput("myplot"), type = 5, color = "#0dc5c1", size = 2)</code></p>
+</div>
+<div id="自定义" class="section level2">
+<h2>自定义</h2>
+<p>该包同样支持自定义你的加载动画，使用<code>image</code>参数调整即可。</p>
+</div>

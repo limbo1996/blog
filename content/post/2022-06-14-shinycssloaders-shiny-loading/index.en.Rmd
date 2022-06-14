@@ -1,0 +1,57 @@
+---
+title: shinycssloaders为Shiny添加Loading动画
+author: Limbo
+date: '2022-06-14'
+slug: shinycssloaders-shiny-loading
+categories:
+  - R
+  - Shiny
+tags:
+  - R
+  - Shiny
+description: ~
+image: ~
+math: ~
+license: ~
+hidden: no
+comments: yes
+---
+
+基础的Shiny的输出(图、表等等)在重新计算更新时，更新方式是变灰，然后更新为新的内容。为了好看可以添加Loading动画。`Shiny`内置了进度条功能，但是样式有些单一，`shinycssloaders`可以添加多样的loading动画样式。
+
+> <https://daattali.com/shiny/shinycssloaders-demo/>
+
+## 使用方法
+
+使用也十分简单，在完成安装后将shiny的output放在`withSpinner()`的调用中即可，在加载了管道操作符的情况下，同样可以使用管道操作`plotOutput("myplot") %>% withSpinner()`
+
+基础的使用如下
+
+```{r include=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+    actionButton("go", "Go"),
+    shinycssloaders::withSpinner(
+        plotOutput("plot")
+    )
+)
+server <- function(input, output) {
+    output$plot <- renderPlot({
+        input$go
+        Sys.sleep(1.5)
+        plot(runif(10))
+    })
+}
+shinyApp(ui, server)
+```
+
+![](https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220614100125.png) 如图所示，即可使用loading动画了。
+
+## 样式
+
+除了默认的动画样式，该包还有另外七中，使用`type`参数调整。同时`color`和`size`还可以调整颜色和大小 `withSpinner(plotOutput("myplot"), type = 5, color = "#0dc5c1", size = 2)`
+
+## 自定义 
+
+该包同样支持自定义你的加载动画，使用`image`参数调整即可。
