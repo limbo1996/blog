@@ -29,31 +29,16 @@ data(diamonds, package = &quot;ggplot2&quot;)</code></pre>
 <h2>plot_ly()</h2>
 <p>我们只需要将变量的名字映射给可视化的参数，<code>plot_ly()</code>可以自动尝试寻找合适个图形来展示数据。</p>
 <pre class="r"><code># plotly tries to find a sensible geometrix
-plotly::plot_ly(diamonds, x = ~cut)</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
-<pre class="r"><code>plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram2d&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram2d</code></pre>
-<pre class="r"><code>plotly::plot_ly(diamonds, x = ~cut, 
+plotly::plot_ly(diamonds, x = ~cut)
+plotly::plot_ly(diamonds, x = ~cut, y = ~clarity)
+plotly::plot_ly(diamonds, x = ~cut, 
                 color = ~clarity, 
                 colors = &quot;Accent&quot;)</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613152836.png" /></p>
 <p><code>plot_ly</code>有大量的参数可以方便的调整你的图表，但是与<code>ggplot2</code>不同的是，如果你直接定义可视范围(如下图一),并不会得到你想要的结果，这里需要使用<code>I()</code>，声明该值位<strong>Asls</strong>。结果如下图二。</p>
 <pre class="r"><code># doesn&#39;t produce black bars
-plotly::plot_ly(diamonds, x = ~cut, color = &quot;black&quot;)</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
-<pre><code>## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): minimal value for n is 3, returning requested palette with 3 different levels
-
-## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): minimal value for n is 3, returning requested palette with 3 different levels</code></pre>
-<pre class="r"><code># produces red bars with black outline
+plotly::plot_ly(diamonds, x = ~cut, color = &quot;black&quot;)
+# produces red bars with black outline
 plotly::plot_ly(
   diamonds, 
   x = ~cut, 
@@ -61,9 +46,6 @@ plotly::plot_ly(
   stroke = I(&quot;black&quot;), 
   span = I(2)
 )</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 <p><img src="https://img-1300058213.cos.ap-shanghai.myqcloud.com/20220613153325.png" /></p>
 </div>
 <div id="layout" class="section level2">
@@ -74,9 +56,6 @@ plotly::layout(
   plot_ly(diamonds, x = ~cut),
   title = &quot;My beatiful histogram&quot;
 )</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 </div>
 <div id="管道操作" class="section level2">
 <h2>管道操作</h2>
@@ -84,9 +63,6 @@ plotly::layout(
 <pre class="r"><code>diamonds %&gt;% 
   plotly::plot_ly(x = ~cut) %&gt;% 
   plotly::layout(title = &quot;My beatiful histogram&quot;)</code></pre>
-<pre><code>## No trace type specified:
-##   Based on info supplied, a &#39;histogram&#39; trace seems appropriate.
-##   Read more about this trace type -&gt; https://plotly.com/r/reference/#histogram</code></pre>
 <p>除了<code>layout</code>之外，还有<code>add_*</code>族的一系列函数可以将数据渲染为几何对象。比如：</p>
 <pre class="r"><code># use add_* functions 
 diamonds %&gt;% 
